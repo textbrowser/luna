@@ -13,20 +13,10 @@ CONFIG      += qt release warn_on
 DEFINES     +=
 LANGUAGE    = C++
 QMAKE_CLEAN += luna
-QT          += concurrent gui printsupport sql widgets
+QT          += concurrent gui sql widgets
 
 contains(QMAKE_HOST.arch, armv7l) {
 QMAKE_CXXFLAGS_RELEASE += -march=armv7
-}
-
-qtHaveModule(pdf) {
-qtHaveModule(pdfwidgets) {
-QT += pdf pdfwidgets
-} else {
-error("The QtPdfWidgets module was not found.")
-}
-} else {
-error("The QtPdf module was not found.")
 }
 
 QMAKE_CXXFLAGS_RELEASE += -O3
@@ -186,9 +176,9 @@ RCC_DIR     = Temporary/rcc
 RESOURCES   = Documentation/documentation.qrc Icons/icons.qrc
 UI_DIR      = Temporary/ui
 
-FORMS   += UI/luna_calendar.ui
-HEADERS += Source/luna_calendar.h
-SOURCES += Source/luna_calendar.cc
+FORMS   += UI/luna-calendar.ui
+HEADERS += Source/luna-calendar.h
+SOURCES += Source/luna-calendar.cc
 
 PROJECTNAME = Luna
 TARGET      = Luna
@@ -227,9 +217,6 @@ qt.files          = Qt\\qt.conf
 qt.path           = release\\.
 qtlibraries.files = $$[QT_INSTALL_BINS]\\Qt*Core.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Gui.dll \
-                    $$[QT_INSTALL_BINS]\\Qt*Network.dll \
-                    $$[QT_INSTALL_BINS]\\Qt*Pdf.dll \
-                    $$[QT_INSTALL_BINS]\\Qt*PrintSupport.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Sql.dll \
                     $$[QT_INSTALL_BINS]\\Qt*Widgets.dll \
                     $$[QT_INSTALL_BINS]\\libgcc_s_seh-*.dll \
