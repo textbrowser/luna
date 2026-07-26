@@ -56,6 +56,7 @@ class luna_calendar: public QMainWindow
 
  private:
   Ui_luna_calendar m_ui;
+  void prepare_month(void);
 
  private slots:
   void slot_exit(void);

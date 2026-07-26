@@ -46,6 +46,26 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  SIGNAL(triggered(void)),
 	  this,
 	  SLOT(slot_exit(void)));
+  prepare_month();
+}
+
+luna_calendar::~luna_calendar()
+{
+}
+
+void luna_calendar::prepare_month(void)
+{
+  auto font(m_ui.month->font());
+
+  font.setBold(true);
+  font.setPointSize(10 + font.pointSize());
+  m_ui.month->setFont(font);
+
+  while(m_ui.grid->itemAt(0))
+    {
+      delete m_ui.grid->itemAt(0)->widget();
+      delete m_ui.grid->takeAt(0);
+    }
 
   QStringList days;
 
@@ -58,12 +78,21 @@ luna_calendar::luna_calendar(void):QMainWindow()
        << tr("Saturday");
 
   for(int i = 0; i < days.size(); i++)
-    m_ui.grid->addWidget
-      (new QLabel(days[i], this), 0, i, Qt::AlignHCenter | Qt::AlignTop);
+    {
+      auto label = new QLabel(days[i], this);
+
+      font = label->font();
+      font.setBold(true);
+      font.setPointSize(5 + font.pointSize());
+      label->setFont(font);
+      m_ui.grid->addWidget(label, 0, i, Qt::AlignHCenter | Qt::AlignTop);
+    }
 
   auto const date(QDate::currentDate());
   auto const first = date.daysInMonth() / 7;
   auto const previous(date.addMonths(-1));
+
+  m_ui.month->setText(date.toString("MMMM"));
 
   for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
       i <= 42;
@@ -95,10 +124,6 @@ luna_calendar::luna_calendar(void):QMainWindow()
       if(i % 7 == 0)
 	row += 1;
     }
-}
-
-luna_calendar::~luna_calendar()
-{
 }
 
 void luna_calendar::slot_exit(void)
