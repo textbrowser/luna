@@ -56,6 +56,9 @@ class luna_calendar: public QMainWindow
 
  private:
   Ui_luna_calendar m_ui;
+
+ private slots:
+  void slot_exit(void);
 };
 
 #endif

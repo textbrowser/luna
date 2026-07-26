@@ -31,17 +31,79 @@
 */
 
 #include <QApplication>
-#include <QIcon>
+#include <QLabel>
+#include <QToolButton>
 
 #include "luna-calendar.h"
 
 luna_calendar::luna_calendar(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  m_ui.grid->setHorizontalSpacing(0);
+  m_ui.grid->setSpacing(0);
+  m_ui.grid->setVerticalSpacing(0);
+  connect(m_ui.action_Exit,
+	  SIGNAL(triggered(void)),
+	  this,
+	  SLOT(slot_exit(void)));
+
+  QStringList days;
+
+  days << tr("Sunday")
+       << tr("Monday")
+       << tr("Tuesday")
+       << tr("Wednesday")
+       << tr("Thursday")
+       << tr("Friday")
+       << tr("Saturday");
+
+  for(int i = 0; i < days.size(); i++)
+    m_ui.grid->addWidget
+      (new QLabel(days[i], this), 0, i, Qt::AlignHCenter | Qt::AlignTop);
+
+  auto const date(QDate::currentDate());
+  auto const first = date.daysInMonth() / 7;
+  auto const previous(date.addMonths(-1));
+
+  for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
+      i <= 42;
+      i++)
+    {
+      auto tool_button = new QToolButton(this);
+
+      m_ui.grid->addWidget(tool_button, row, (i - 1) % 7);
+      tool_button->setAutoRaise(true);
+      tool_button->setEnabled(false);
+      tool_button->setSizePolicy
+	(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+      if(date.daysInMonth() > day && first <= i)
+	{
+	  day += 1;
+	  tool_button->setDown(date.day() == day);
+	  tool_button->setEnabled(true);
+	  tool_button->setText(QString::number(day));
+	}
+      else
+	{
+	  if(date.daysInMonth() <= day)
+	    tool_button->setText(QString::number(1 - day - first + i));
+	  else
+	    tool_button->setText(QString::number(++j));
+	}
+
+      if(i % 7 == 0)
+	row += 1;
+    }
 }
 
 luna_calendar::~luna_calendar()
 {
+}
+
+void luna_calendar::slot_exit(void)
+{
+  close();
 }
 
 int main(int argc, char *argv[])
@@ -69,7 +131,7 @@ int main(int argc, char *argv[])
     luna_calendar luna;
 
 #ifndef Q_OS_ANDROID
-    luna.show();
+    luna.showFullScreen();
 #else
     luna.showMaximized();
 #endif
