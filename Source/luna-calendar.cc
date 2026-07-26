@@ -61,11 +61,13 @@ void luna_calendar::prepare_month(void)
   font.setPointSize(10 + font.pointSize());
   m_ui.month->setFont(font);
 
-  while(m_ui.grid->itemAt(0))
+  for(int i = m_ui.grid->count() - 1; i >= 0; i--)
     {
-      delete m_ui.grid->itemAt(0)->widget();
-      delete m_ui.grid->takeAt(0);
+      delete m_ui.grid->itemAt(i)->widget();
+      delete m_ui.grid->takeAt(i);
     }
+
+  m_ui.grid->invalidate();
 
   QStringList days;
 
