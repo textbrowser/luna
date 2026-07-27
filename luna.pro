@@ -176,9 +176,12 @@ RCC_DIR     = Temporary/rcc
 RESOURCES   = Documentation/documentation.qrc Icons/icons.qrc
 UI_DIR      = Temporary/ui
 
-FORMS   += UI/luna-calendar.ui
-HEADERS += Source/luna-calendar.h
-SOURCES += Source/luna-calendar.cc
+FORMS   += UI/luna-calendar.ui \
+           UI/luna-day-widget.ui
+HEADERS += Source/luna-calendar.h \
+           Source/luna-day-widget.h
+SOURCES += Source/luna-calendar.cc \
+           Source/luna-day-widget.cc
 
 PROJECTNAME = Luna
 TARGET      = Luna

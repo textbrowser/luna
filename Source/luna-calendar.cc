@@ -32,9 +32,9 @@
 
 #include <QApplication>
 #include <QLabel>
-#include <QToolButton>
 
 #include "luna-calendar.h"
+#include "luna-day-widget.h"
 
 int main(int argc, char *argv[])
 {
@@ -104,6 +104,9 @@ luna_calendar::luna_calendar(void):QMainWindow()
   m_ui.grid->setHorizontalSpacing(0);
   m_ui.grid->setSpacing(0);
   m_ui.grid->setVerticalSpacing(0);
+  m_ui.next_month->setAutoRaise(true);
+  m_ui.previous_month->setAutoRaise(true);
+  m_ui.today->setAutoRaise(true);
   prepare_fonts();
   prepare_month(m_date = QDate::currentDate());
 }
@@ -164,10 +167,9 @@ void luna_calendar::prepare_month(const QDate &date)
       i <= 42;
       i++)
     {
-      auto tool_button = new QToolButton(this);
+      auto tool_button = new luna_day_widget(this);
 
       m_ui.grid->addWidget(tool_button, row, (i - 1) % 7);
-      tool_button->setAutoRaise(true);
       tool_button->setEnabled(false);
       tool_button->setSizePolicy
 	(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -175,16 +177,16 @@ void luna_calendar::prepare_month(const QDate &date)
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
-	  tool_button->setDown(date.day() == day && today == date);
 	  tool_button->setEnabled(true);
-	  tool_button->setText(QString::number(day));
+	  tool_button->set_day_text(QString::number(day));
+	  tool_button->set_down(date.day() == day && today == date);
 	}
       else
 	{
 	  if(date.daysInMonth() <= day)
-	    tool_button->setText(QString::number(1 - day - first + i));
+	    tool_button->set_day_text(QString::number(1 - day - first + i));
 	  else
-	    tool_button->setText(QString::number(++j));
+	    tool_button->set_day_text(QString::number(++j));
 	}
 
       if(i % 7 == 0)
