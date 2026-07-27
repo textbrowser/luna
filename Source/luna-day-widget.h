@@ -54,6 +54,7 @@ class luna_day_widget: public QWidget
  private:
   QLabel *m_day;
   Ui_luna_day_widget m_ui;
+  void prepare_fonts(void);
 };
 
 #endif

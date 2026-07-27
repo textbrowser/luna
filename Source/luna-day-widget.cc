@@ -39,10 +39,19 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_day = new QLabel(this);
   m_day->move(10, 1);
   m_ui.setupUi(this);
+  prepare_fonts();
 }
 
 luna_day_widget::~luna_day_widget()
 {
+}
+
+void luna_day_widget::prepare_fonts(void)
+{
+  auto font(m_day->font());
+
+  font.setBold(true);
+  m_day->setFont(font);
 }
 
 void luna_day_widget::set_day_text(const QString &text)
