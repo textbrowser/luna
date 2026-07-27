@@ -30,9 +30,29 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="month">
+       <widget class="QLabel" name="month_year">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Month, Year</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="clock">
+        <property name="text">
+         <string>Clock</string>
         </property>
        </widget>
       </item>
@@ -48,6 +68,27 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="previous_month">
+        <property name="text">
+         <string>&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="today">
+        <property name="text">
+         <string>Today</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="next_month">
+        <property name="text">
+         <string>&gt;</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -83,6 +124,11 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>previous_month</tabstop>
+  <tabstop>today</tabstop>
+  <tabstop>next_month</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

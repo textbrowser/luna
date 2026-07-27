@@ -36,103 +36,6 @@
 
 #include "luna-calendar.h"
 
-luna_calendar::luna_calendar(void):QMainWindow()
-{
-  m_ui.setupUi(this);
-  m_ui.grid->setHorizontalSpacing(0);
-  m_ui.grid->setSpacing(0);
-  m_ui.grid->setVerticalSpacing(0);
-  connect(m_ui.action_Exit,
-	  SIGNAL(triggered(void)),
-	  this,
-	  SLOT(slot_exit(void)));
-  prepare_month();
-}
-
-luna_calendar::~luna_calendar()
-{
-}
-
-void luna_calendar::prepare_month(void)
-{
-  auto font(m_ui.month->font());
-
-  font.setBold(true);
-  font.setPointSize(10 + font.pointSize());
-  m_ui.month->setFont(font);
-
-  for(int i = m_ui.grid->count() - 1; i >= 0; i--)
-    {
-      delete m_ui.grid->itemAt(i)->widget();
-      delete m_ui.grid->takeAt(i);
-    }
-
-  m_ui.grid->invalidate();
-
-  QStringList days;
-
-  days << tr("Sunday")
-       << tr("Monday")
-       << tr("Tuesday")
-       << tr("Wednesday")
-       << tr("Thursday")
-       << tr("Friday")
-       << tr("Saturday");
-
-  for(int i = 0; i < days.size(); i++)
-    {
-      auto label = new QLabel(days[i], this);
-
-      font = label->font();
-      font.setBold(true);
-      font.setPointSize(5 + font.pointSize());
-      label->setFont(font);
-      m_ui.grid->addWidget(label, 0, i, Qt::AlignHCenter | Qt::AlignTop);
-    }
-
-  auto const date(QDate::currentDate());
-  auto const first = date.daysInMonth() / 7;
-  auto const previous(date.addMonths(-1));
-
-  m_ui.month->setText(date.toString("MMMM"));
-
-  for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
-      i <= 42;
-      i++)
-    {
-      auto tool_button = new QToolButton(this);
-
-      m_ui.grid->addWidget(tool_button, row, (i - 1) % 7);
-      tool_button->setAutoRaise(true);
-      tool_button->setEnabled(false);
-      tool_button->setSizePolicy
-	(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-      if(date.daysInMonth() > day && first <= i)
-	{
-	  day += 1;
-	  tool_button->setDown(date.day() == day);
-	  tool_button->setEnabled(true);
-	  tool_button->setText(QString::number(day));
-	}
-      else
-	{
-	  if(date.daysInMonth() <= day)
-	    tool_button->setText(QString::number(1 - day - first + i));
-	  else
-	    tool_button->setText(QString::number(++j));
-	}
-
-      if(i % 7 == 0)
-	row += 1;
-    }
-}
-
-void luna_calendar::slot_exit(void)
-{
-  close();
-}
-
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_ANDROID)
@@ -171,4 +74,139 @@ int main(int argc, char *argv[])
   activity.callMethod<void> ("finishAndRemoveTask");
 #endif
   return rc;
+}
+
+luna_calendar::luna_calendar(void):QMainWindow()
+{
+  m_ui.setupUi(this);
+  connect(&m_clock_timer,
+	  &QTimer::timeout,
+	  this,
+	  &luna_calendar::slot_clock_timer_timeout);
+  connect(m_ui.action_Exit,
+	  &QAction::triggered,
+	  this,
+	  &luna_calendar::slot_exit);
+  connect(m_ui.next_month,
+	  &QToolButton::clicked,
+	  this,
+	  &luna_calendar::slot_select_month);
+  connect(m_ui.previous_month,
+	  &QToolButton::clicked,
+	  this,
+	  &luna_calendar::slot_select_month);
+  connect(m_ui.today,
+	  &QToolButton::clicked,
+	  this,
+	  &luna_calendar::slot_select_month);
+  m_clock_timer.start(1000);
+  m_ui.clock->clear();
+  m_ui.grid->setHorizontalSpacing(0);
+  m_ui.grid->setSpacing(0);
+  m_ui.grid->setVerticalSpacing(0);
+  prepare_fonts();
+  prepare_month(m_date = QDate::currentDate());
+}
+
+luna_calendar::~luna_calendar()
+{
+}
+
+void luna_calendar::prepare_fonts(void)
+{
+  auto font(m_ui.clock->font());
+
+  font.setBold(true);
+  font.setPointSize(10 + font.pointSize());
+  m_ui.clock->setFont(font);
+  m_ui.month_year->setFont(font);
+}
+
+void luna_calendar::prepare_month(const QDate &date)
+{
+  for(int i = m_ui.grid->count() - 1; i >= 0; i--)
+    {
+      delete m_ui.grid->itemAt(i)->widget();
+      delete m_ui.grid->takeAt(i);
+    }
+
+  m_ui.grid->invalidate();
+
+  QStringList days;
+
+  days << tr("Sunday")
+       << tr("Monday")
+       << tr("Tuesday")
+       << tr("Wednesday")
+       << tr("Thursday")
+       << tr("Friday")
+       << tr("Saturday");
+
+  for(int i = 0; i < days.size(); i++)
+    {
+      QFont font;
+      auto label = new QLabel(days[i], this);
+
+      font = label->font();
+      font.setBold(true);
+      font.setPointSize(5 + font.pointSize());
+      label->setFont(font);
+      m_ui.grid->addWidget(label, 0, i, Qt::AlignHCenter | Qt::AlignTop);
+    }
+
+  auto const first = date.daysInMonth() / 7;
+  auto const previous(date.addMonths(-1));
+
+  m_ui.month_year->setText(date.toString("MMMM, yyyy"));
+
+  for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
+      i <= 42;
+      i++)
+    {
+      auto tool_button = new QToolButton(this);
+
+      m_ui.grid->addWidget(tool_button, row, (i - 1) % 7);
+      tool_button->setAutoRaise(true);
+      tool_button->setEnabled(false);
+      tool_button->setSizePolicy
+	(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+      if(date.daysInMonth() > day && first <= i)
+	{
+	  day += 1;
+	  tool_button->setDown(date.day() == day);
+	  tool_button->setEnabled(true);
+	  tool_button->setText(QString::number(day));
+	}
+      else
+	{
+	  if(date.daysInMonth() <= day)
+	    tool_button->setText(QString::number(1 - day - first + i));
+	  else
+	    tool_button->setText(QString::number(++j));
+	}
+
+      if(i % 7 == 0)
+	row += 1;
+    }
+}
+
+void luna_calendar::slot_clock_timer_timeout(void)
+{
+  m_ui.clock->setText(QDateTime::currentDateTime().toString("hh:mm:ss"));
+}
+
+void luna_calendar::slot_exit(void)
+{
+  close();
+}
+
+void luna_calendar::slot_select_month(void)
+{
+  if(m_ui.next_month == sender())
+    prepare_month(m_date = m_date.addMonths(1));
+  else if(m_ui.previous_month == sender())
+    prepare_month(m_date = m_date.addMonths(-1));
+  else
+    prepare_month(m_date = QDate::currentDate());
 }

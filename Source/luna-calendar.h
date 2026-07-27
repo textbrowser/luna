@@ -34,6 +34,7 @@
 #define luna_calendar_h
 
 #include <QDir>
+#include <QTimer>
 
 #include "ui_luna-calendar.h"
 
@@ -55,11 +56,16 @@ class luna_calendar: public QMainWindow
   }
 
  private:
+  QDate m_date;
+  QTimer m_clock_timer;
   Ui_luna_calendar m_ui;
-  void prepare_month(void);
+  void prepare_fonts(void);
+  void prepare_month(const QDate &date);
 
  private slots:
   void slot_exit(void);
+  void slot_clock_timer_timeout(void);
+  void slot_select_month(void);
 };
 
 #endif
