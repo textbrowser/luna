@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     luna_calendar luna;
 
 #ifndef Q_OS_ANDROID
-    luna.showFullScreen();
+    luna.show();
 #else
     luna.showMaximized();
 #endif
@@ -154,8 +154,9 @@ void luna_calendar::prepare_month(const QDate &date)
       m_ui.grid->addWidget(label, 0, i, Qt::AlignHCenter | Qt::AlignTop);
     }
 
-  auto const first = date.daysInMonth() / 7;
+  auto const first = QDate(date.year(), date.month(), 1).dayOfWeek() + 1;
   auto const previous(date.addMonths(-1));
+  auto const today(QDate::currentDate());
 
   m_ui.month_year->setText(date.toString("MMMM, yyyy"));
 
@@ -174,7 +175,7 @@ void luna_calendar::prepare_month(const QDate &date)
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
-	  tool_button->setDown(date.day() == day);
+	  tool_button->setDown(date.day() == day && today == date);
 	  tool_button->setEnabled(true);
 	  tool_button->setText(QString::number(day));
 	}
