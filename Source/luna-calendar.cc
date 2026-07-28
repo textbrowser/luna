@@ -167,31 +167,35 @@ void luna_calendar::prepare_month(const QDate &date)
       i <= 42;
       i++)
     {
-      auto tool_button = new luna_day_widget(this);
+      auto widget = new luna_day_widget(this);
 
-      m_ui.grid->addWidget(tool_button, row, (i - 1) % 7);
-      tool_button->setEnabled(false);
-      tool_button->setSizePolicy
-	(QSizePolicy::Expanding, QSizePolicy::Expanding);
+      m_ui.grid->addWidget(widget, row, (i - 1) % 7);
+      widget->setEnabled(false);
+      widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
-	  tool_button->setEnabled(true);
-	  tool_button->set_day_text(QString::number(day));
-	  tool_button->set_down(date.day() == day && today == date);
+	  widget->setEnabled(true);
+	  widget->set_date(QDate(date.year(), date.month(), day));
+	  widget->set_day_text(QString::number(day));
+	  widget->set_down(date.day() == day && today == date);
 	}
       else
 	{
 	  if(date.daysInMonth() <= day)
-	    tool_button->set_day_text(QString::number(1 - day - first + i));
+	    widget->set_day_text(QString::number(1 - day - first + i));
 	  else
-	    tool_button->set_day_text(QString::number(++j));
+	    widget->set_day_text(QString::number(++j));
 	}
 
       if(i % 7 == 0)
 	row += 1;
     }
+}
+
+void luna_calendar::slot_about(void)
+{
 }
 
 void luna_calendar::slot_clock_timer_timeout(void)

@@ -63,8 +63,9 @@ class luna_calendar: public QMainWindow
   void prepare_month(const QDate &date);
 
  private slots:
-  void slot_exit(void);
+  void slot_about(void);
   void slot_clock_timer_timeout(void);
+  void slot_exit(void);
   void slot_select_month(void);
 };
 

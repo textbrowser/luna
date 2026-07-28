@@ -39,6 +39,10 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_day = new QLabel(this);
   m_day->move(10, 1);
   m_ui.setupUi(this);
+  connect(m_ui.information,
+	  &QToolButton::clicked,
+	  this,
+	  &luna_day_widget::slot_clicked);
   prepare_fonts();
 }
 
@@ -57,4 +61,14 @@ void luna_day_widget::prepare_fonts(void)
 void luna_day_widget::set_day_text(const QString &text)
 {
   m_day->setText(text);
+}
+
+void luna_day_widget::slot_clicked(void)
+{
+  if(QDate::currentDate() == m_date)
+    {
+      m_ui.information->blockSignals(true);
+      m_ui.information->setDown(true);
+      m_ui.information->blockSignals(false);
+    }
 }
