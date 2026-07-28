@@ -38,6 +38,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
   m_day = new QLabel(this);
   m_day->move(10, 1);
+  m_modify = nullptr;
   m_ui.setupUi(this);
   connect(m_ui.information,
 	  &QToolButton::clicked,
@@ -58,6 +59,25 @@ void luna_day_widget::prepare_fonts(void)
   m_day->setFont(font);
 }
 
+void luna_day_widget::set_date(const QDate &date)
+{
+  m_date = date;
+
+  if(m_date.isValid() && m_modify == nullptr)
+    {
+      m_modify = new QToolButton(this);
+      m_modify->move(10, m_day->height());
+      m_modify->resize(35, 35);
+      m_modify->setAutoRaise(true);
+      m_modify->setText("...");
+      m_modify->setToolTip(tr("Events"));
+      connect(m_modify,
+	      &QToolButton::clicked,
+	      this,
+	      &luna_day_widget::slot_modify);
+    }
+}
+
 void luna_day_widget::set_day_text(const QString &text)
 {
   m_day->setText(text);
@@ -71,4 +91,8 @@ void luna_day_widget::slot_clicked(void)
       m_ui.information->setDown(true);
       m_ui.information->blockSignals(false);
     }
+}
+
+void luna_day_widget::slot_modify(void)
+{
 }

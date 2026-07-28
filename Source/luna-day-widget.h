@@ -46,12 +46,8 @@ class luna_day_widget: public QWidget
  public:
   luna_day_widget(QWidget *parent);
   ~luna_day_widget();
+  void set_date(const QDate &date);
   void set_day_text(const QString &text);
-
-  void set_date(const QDate &date)
-  {
-    m_date = date;
-  }
 
   void set_down(const bool state)
   {
@@ -61,10 +57,12 @@ class luna_day_widget: public QWidget
  private:
   QDate m_date;
   QLabel *m_day;
+  QToolButton *m_modify;
   Ui_luna_day_widget m_ui;
   void prepare_fonts(void);
 
  private slots:
+  void slot_modify(void);
   void slot_clicked(void);
 };
 
