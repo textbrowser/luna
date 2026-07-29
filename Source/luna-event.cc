@@ -30,44 +30,18 @@
      OF LUNA, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef luna_calendar_h
-#define luna_calendar_h
+#include "luna-event.h"
 
-#include <QDir>
-#include <QTimer>
-
-#include "ui_luna-calendar.h"
-
-class luna_calendar: public QMainWindow
+luna_event::luna_event(QWidget *parent):QDialog(parent)
 {
-  Q_OBJECT
+  m_ui.setupUi(this);
+}
 
- public:
-  luna_calendar(void);
-  ~luna_calendar();
+luna_event::~luna_event()
+{
+}
 
-  static QString home_path(void)
-  {
-#ifdef Q_OS_WINDOWS
-    return QDir::currentPath() + QDir::separator() + ".luna";
-#else
-    return QDir::homePath() + QDir::separator() + ".luna";
-#endif
-  }
-
- private:
-  QDate m_date;
-  QTimer m_clock_timer;
-  Ui_luna_calendar m_ui;
-  static QString s_version;
-  void prepare_fonts(void);
-  void prepare_month(const QDate &date);
-
- private slots:
-  void slot_about(void);
-  void slot_clock_timer_timeout(void);
-  void slot_exit(void);
-  void slot_select_month(void);
-};
-
-#endif
+void luna_event::set_date(const QDate &date)
+{
+  m_ui.date->setText(date.toString("dddd, MMMM d"));
+}

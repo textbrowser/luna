@@ -36,6 +36,8 @@
 #include "luna-calendar.h"
 #include "luna-day-widget.h"
 
+QString luna_calendar::s_version = "2026.08.05";
+
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_ANDROID)

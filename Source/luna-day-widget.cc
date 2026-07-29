@@ -33,13 +33,14 @@
 #include <QLabel>
 
 #include "luna-day-widget.h"
+#include "luna-event.h"
 
 luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
+  m_add = nullptr;
   m_day = new QLabel(this);
   m_day->move(10, 5);
   m_events = new QLabel(this);
-  m_modify = nullptr;
   m_ui.setupUi(this);
   connect(m_ui.button,
 	  &QToolButton::clicked,
@@ -72,24 +73,32 @@ void luna_day_widget::set_date(const QDate &date)
 {
   m_date = date;
 
-  if(m_date.isValid() && m_modify == nullptr)
+  if(m_add == nullptr && m_date.isValid())
     {
-      m_modify = new QToolButton(this);
-      m_modify->move(10, 5 + m_day->height());
-      m_modify->resize(35, 35);
-      m_modify->setIcon(QIcon(":/32x32/configure.svg"));
-      m_modify->setIconSize(QSize(32, 32));
-      m_modify->setToolTip(tr("Events"));
-      connect(m_modify,
+      m_add = new QToolButton(this);
+      m_add->move(10, 5 + m_day->height());
+      m_add->resize(35, 35);
+      m_add->setIcon(QIcon(":/32x32/configure.svg"));
+      m_add->setIconSize(QSize(32, 32));
+      m_add->setToolTip(tr("Add Event"));
+      connect(m_add,
 	      &QToolButton::clicked,
 	      this,
-	      &luna_day_widget::slot_modify);
+	      &luna_day_widget::slot_add);
     }
 }
 
 void luna_day_widget::set_day_text(const QString &text)
 {
   m_day->setText(text);
+}
+
+void luna_day_widget::slot_add(void)
+{
+  luna_event event(this);
+
+  event.set_date(m_date);
+  event.exec();
 }
 
 void luna_day_widget::slot_clicked(void)
@@ -100,8 +109,4 @@ void luna_day_widget::slot_clicked(void)
       m_ui.button->setDown(true);
       m_ui.button->blockSignals(false);
     }
-}
-
-void luna_day_widget::slot_modify(void)
-{
 }

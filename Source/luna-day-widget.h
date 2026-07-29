@@ -58,12 +58,12 @@ class luna_day_widget: public QWidget
   QDate m_date;
   QLabel *m_day;
   QLabel *m_events;
-  QToolButton *m_modify;
+  QToolButton *m_add;
   Ui_luna_day_widget m_ui;
   void prepare_fonts(void);
 
  private slots:
-  void slot_modify(void);
+  void slot_add(void);
   void slot_clicked(void);
 };
 

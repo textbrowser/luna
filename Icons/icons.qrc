@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-	<file>16x16/configure.svg</file>
-	<file>32x32/configure.svg</file>
+	<file>32x32/close.svg</file>
+	<file>32x32/delete.svg</file>
     </qresource>
 </RCC>
