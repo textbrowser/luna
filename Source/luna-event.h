@@ -59,7 +59,8 @@ class luna_event: public QDialog
   void slot_save(void);
 
  signals:
-  void remove(const QDate &date, const qint64 oid);
+  void remove(const qint64 oid);
+  void save(void);
 };
 
 #endif

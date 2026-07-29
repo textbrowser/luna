@@ -91,11 +91,12 @@ void luna_event::set_title(const QString &title)
 
 void luna_event::slot_remove(void)
 {
-  emit remove(m_date, m_oid);
+  emit remove(m_oid);
   reject();
 }
 
 void luna_event::slot_save(void)
 {
+  emit save();
   accept();
 }

@@ -60,6 +60,7 @@ class luna_day_widget: public QWidget
   Ui_luna_day_widget m_ui;
   void add_event(QPushButton *button,
 		 const QString &t,
+		 const QTime &end,
 		 const QTime &time,
 		 const qint64 oid);
   void prepare_fonts(void);
@@ -68,6 +69,8 @@ class luna_day_widget: public QWidget
  private slots:
   void slot_add(void);
   void slot_modify(void);
+  void slot_remove(const qint64 oid);
+  void slot_save(void);
 };
 
 #endif

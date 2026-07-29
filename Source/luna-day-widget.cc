@@ -57,7 +57,11 @@ luna_day_widget::~luna_day_widget()
 }
 
 void luna_day_widget::add_event
-(QPushButton *event, const QString &t, const QTime &start, const qint64 oid)
+(QPushButton *event,
+ const QString &t,
+ const QTime &end,
+ const QTime &start,
+ const qint64 oid)
 {
   QString title("");
 
@@ -84,10 +88,12 @@ void luna_day_widget::add_event
 	      &QPushButton::clicked,
 	      this,
 	      &luna_day_widget::slot_modify);
+      event->setObjectName(QString::number(oid));
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setSpacing(1);
     }
 
+  event->setProperty("end", end);
   event->setProperty("oid", oid);
   event->setProperty("start", start);
   event->setProperty("title", t);
@@ -142,13 +148,21 @@ void luna_day_widget::slot_add(void)
 {
   m_add ? m_add->setDown(QDate::currentDate() == m_date) : (void) 0;
 
-  luna_event event(this);
+  auto event = new luna_event(this);
 
-  event.resize(event.sizeHint());
-  event.set_date(m_date);
-
-  if(event.exec() == QDialog::Accepted)
-    add_event(nullptr, event.title(), event.start(), event.oid());
+  connect(event,
+	  &luna_event::save,
+	  this,
+	  &luna_day_widget::slot_save);
+  connect(event,
+	  SIGNAL(remove(const qint64)),
+	  this,
+	  SLOT(slot_remove(const qint64)));
+  event->setAttribute(Qt::WA_DeleteOnClose);
+  event->resize(event->sizeHint());
+  event->setModal(false);
+  event->set_date(m_date);
+  event->show();
 }
 
 void luna_day_widget::slot_modify(void)
@@ -158,12 +172,41 @@ void luna_day_widget::slot_modify(void)
   if(!button)
     return;
 
-  luna_event event(this);
+  auto event = new luna_event(this);
 
-  event.resize(event.sizeHint());
-  event.set_date(m_date);
-  event.set_title(button->property("title").toString());
+  connect(event,
+	  &luna_event::save,
+	  this,
+	  &luna_day_widget::slot_save);
+  connect(event,
+	  SIGNAL(remove(const qint64)),
+	  this,
+	  SLOT(slot_remove(const qint64)));
+  event->setAttribute(Qt::WA_DeleteOnClose);
+  event->resize(event->sizeHint());
+  event->setModal(false);
+  event->set_date(m_date);
+  event->set_title(button->property("title").toString());
+  event->show();
+}
 
-  if(event.exec() == QDialog::Accepted)
-    add_event(button, event.title(), event.start(), event.oid());
+void luna_day_widget::slot_remove(const qint64 oid)
+{
+  auto button = m_events_area->findChild<QPushButton *> (QString::number(oid));
+
+  if(button)
+    button->deleteLater();
+}
+
+void luna_day_widget::slot_save(void)
+{
+  auto event = qobject_cast<luna_event *> (sender());
+
+  if(!event)
+    return;
+
+  auto button = m_events_area->findChild<QPushButton *>
+    (QString::number(event->oid()));
+
+  add_event(button, event->title(), event->end(), event->start(), event->oid());
 }
