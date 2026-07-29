@@ -37,10 +37,11 @@
 luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
   m_day = new QLabel(this);
-  m_day->move(10, 1);
+  m_day->move(10, 5);
+  m_events = new QLabel(this);
   m_modify = nullptr;
   m_ui.setupUi(this);
-  connect(m_ui.information,
+  connect(m_ui.button,
 	  &QToolButton::clicked,
 	  this,
 	  &luna_day_widget::slot_clicked);
@@ -57,6 +58,14 @@ void luna_day_widget::prepare_fonts(void)
 
   font.setBold(true);
   m_day->setFont(font);
+  m_day->resize(QFontMetrics(m_day->font()).boundingRect("00").size());
+  font = m_events->font();
+  font.setBold(true);
+  font.setPointSize(10 + font.pointSize());
+  m_events->move(50, 5);
+  m_events->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  m_events->setFont(font);
+  m_events->resize(m_events->sizeHint());
 }
 
 void luna_day_widget::set_date(const QDate &date)
@@ -66,10 +75,10 @@ void luna_day_widget::set_date(const QDate &date)
   if(m_date.isValid() && m_modify == nullptr)
     {
       m_modify = new QToolButton(this);
-      m_modify->move(10, m_day->height());
+      m_modify->move(10, 5 + m_day->height());
       m_modify->resize(35, 35);
-      m_modify->setAutoRaise(true);
-      m_modify->setText("...");
+      m_modify->setIcon(QIcon(":/32x32/configure.svg"));
+      m_modify->setIconSize(QSize(32, 32));
       m_modify->setToolTip(tr("Events"));
       connect(m_modify,
 	      &QToolButton::clicked,
@@ -87,9 +96,9 @@ void luna_day_widget::slot_clicked(void)
 {
   if(QDate::currentDate() == m_date)
     {
-      m_ui.information->blockSignals(true);
-      m_ui.information->setDown(true);
-      m_ui.information->blockSignals(false);
+      m_ui.button->blockSignals(true);
+      m_ui.button->setDown(true);
+      m_ui.button->blockSignals(false);
     }
 }
 

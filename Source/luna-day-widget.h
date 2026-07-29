@@ -51,12 +51,13 @@ class luna_day_widget: public QWidget
 
   void set_down(const bool state)
   {
-    m_ui.information->setDown(state);
+    m_ui.button->setDown(state);
   }
 
  private:
   QDate m_date;
   QLabel *m_day;
+  QLabel *m_events;
   QToolButton *m_modify;
   Ui_luna_day_widget m_ui;
   void prepare_fonts(void);
