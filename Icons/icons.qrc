@@ -2,5 +2,6 @@
     <qresource prefix="/">
 	<file>32x32/close.svg</file>
 	<file>32x32/delete.svg</file>
+	<file>32x32/new.svg</file>
     </qresource>
 </RCC>

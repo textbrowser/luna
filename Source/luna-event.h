@@ -42,10 +42,23 @@ class luna_event: public QDialog
  public:
   luna_event(QWidget *parent);
   ~luna_event();
+  QString title(void) const;
+  QTime end(void) const;
+  QTime start(void) const;
+  qint64 oid(void) const;
   void set_date(const QDate &date);
 
  private:
+  QDate m_date;
   Ui_luna_event m_ui;
+  qint64 m_oid;
+
+ private slots:
+  void slot_remove(void);
+  void slot_save(void);
+
+ signals:
+  void remove(const QDate &date, const qint64 oid);
 };
 
 #endif

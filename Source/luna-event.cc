@@ -34,14 +34,63 @@
 
 luna_event::luna_event(QWidget *parent):QDialog(parent)
 {
+  m_oid = 0;
   m_ui.setupUi(this);
+  connect(m_ui.remove,
+	  &QPushButton::clicked,
+	  this,
+	  &luna_event::slot_remove);
+  connect(m_ui.save,
+	  &QPushButton::clicked,
+	  this,
+	  &luna_event::slot_save);
+  connect(m_ui.time,
+	  SIGNAL(toggled(bool)),
+	  m_ui.end,
+	  SLOT(setEnabled(bool)));
+  connect(m_ui.time,
+	  SIGNAL(toggled(bool)),
+	  m_ui.start,
+	  SLOT(setEnabled(bool)));
 }
 
 luna_event::~luna_event()
 {
 }
 
+QString luna_event::title(void) const
+{
+  return m_ui.title->text().trimmed();
+}
+
+QTime luna_event::end(void) const
+{
+  return m_ui.end->time();
+}
+
+QTime luna_event::start(void) const
+{
+  return m_ui.start->time();
+}
+
+qint64 luna_event::oid(void) const
+{
+  return m_oid;
+}
+
 void luna_event::set_date(const QDate &date)
 {
+  m_date = date;
   m_ui.date->setText(date.toString("dddd, MMMM d"));
+}
+
+void luna_event::slot_remove(void)
+{
+  emit remove(m_date, m_oid);
+  reject();
+}
+
+void luna_event::slot_save(void)
+{
+  accept();
 }

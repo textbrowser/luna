@@ -31,6 +31,7 @@
 */
 
 #include <QLabel>
+#include <QScrollArea>
 
 #include "luna-day-widget.h"
 #include "luna-event.h"
@@ -41,6 +42,12 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_day = new QLabel(this);
   m_day->move(10, 5);
   m_events = new QLabel(this);
+  m_events_area = new QScrollArea(this);
+  m_events_area->move(50, 10);
+  m_events_area->setWidget(new QWidget(this));
+  m_events_area->setWidgetResizable(true);
+  m_events_area->widget()->setLayout(new QVBoxLayout(m_events_area->widget()));
+  m_events_area->widget()->setVisible(true);
   m_ui.setupUi(this);
   connect(m_ui.button,
 	  &QToolButton::clicked,
@@ -51,6 +58,16 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 
 luna_day_widget::~luna_day_widget()
 {
+}
+
+void luna_day_widget::add_event(const QString &title, const qint64 oid)
+{
+  auto event = new QPushButton(this);
+
+  event->setProperty("oid", oid);
+  event->setText(title.isEmpty() ? tr("No Title") : title);
+  event->setVisible(true);
+  m_events_area->widget()->layout()->addWidget(event);
 }
 
 void luna_day_widget::prepare_fonts(void)
@@ -69,6 +86,12 @@ void luna_day_widget::prepare_fonts(void)
   m_events->resize(m_events->sizeHint());
 }
 
+void luna_day_widget::resizeEvent(QResizeEvent *event)
+{
+  QWidget::resizeEvent(event);
+  m_events_area->resize(-100 + size().width(), -25 + size().height());
+}
+
 void luna_day_widget::set_date(const QDate &date)
 {
   m_date = date;
@@ -78,7 +101,7 @@ void luna_day_widget::set_date(const QDate &date)
       m_add = new QToolButton(this);
       m_add->move(10, 5 + m_day->height());
       m_add->resize(35, 35);
-      m_add->setIcon(QIcon(":/32x32/configure.svg"));
+      m_add->setIcon(QIcon(":/32x32/new.svg"));
       m_add->setIconSize(QSize(32, 32));
       m_add->setToolTip(tr("Add Event"));
       connect(m_add,
@@ -97,8 +120,11 @@ void luna_day_widget::slot_add(void)
 {
   luna_event event(this);
 
+  event.resize(event.sizeHint());
   event.set_date(m_date);
-  event.exec();
+
+  if(event.exec() == QDialog::Accepted)
+    add_event(event.title(), event.oid());
 }
 
 void luna_day_widget::slot_clicked(void)

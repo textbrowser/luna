@@ -38,6 +38,7 @@
 #include "ui_luna-day-widget.h"
 
 class QLabel;
+class QScrollArea;
 
 class luna_day_widget: public QWidget
 {
@@ -58,9 +59,12 @@ class luna_day_widget: public QWidget
   QDate m_date;
   QLabel *m_day;
   QLabel *m_events;
+  QScrollArea *m_events_area;
   QToolButton *m_add;
   Ui_luna_day_widget m_ui;
+  void add_event(const QString &title, const qint64 oid);
   void prepare_fonts(void);
+  void resizeEvent(QResizeEvent *event);
 
  private slots:
   void slot_add(void);

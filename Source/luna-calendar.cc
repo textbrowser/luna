@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     luna_calendar luna;
 
 #ifndef Q_OS_ANDROID
-    luna.showFullScreen();
+    luna.show();
 #else
     luna.showMaximized();
 #endif
