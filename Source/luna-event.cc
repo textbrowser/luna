@@ -65,12 +65,12 @@ QString luna_event::title(void) const
 
 QTime luna_event::end(void) const
 {
-  return m_ui.end->time();
+  return m_ui.time->isChecked() ? m_ui.end->time() : QTime();
 }
 
 QTime luna_event::start(void) const
 {
-  return m_ui.start->time();
+  return m_ui.time->isChecked() ? m_ui.start->time() : QTime();
 }
 
 qint64 luna_event::oid(void) const
@@ -82,6 +82,11 @@ void luna_event::set_date(const QDate &date)
 {
   m_date = date;
   m_ui.date->setText(date.toString("dddd, MMMM d"));
+}
+
+void luna_event::set_title(const QString &title)
+{
+  m_ui.title->setText(title);
 }
 
 void luna_event::slot_remove(void)

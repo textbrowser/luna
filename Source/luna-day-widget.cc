@@ -32,6 +32,7 @@
 
 #include <QLabel>
 #include <QScrollArea>
+#include <QToolButton>
 
 #include "luna-day-widget.h"
 #include "luna-event.h"
@@ -41,7 +42,6 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_add = nullptr;
   m_day = new QLabel(this);
   m_day->move(10, 5);
-  m_events = new QLabel(this);
   m_events_area = new QScrollArea(this);
   m_events_area->move(50, 10);
   m_events_area->setWidget(new QWidget(this));
@@ -49,10 +49,6 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_events_area->widget()->setLayout(new QVBoxLayout(m_events_area->widget()));
   m_events_area->widget()->setVisible(true);
   m_ui.setupUi(this);
-  connect(m_ui.button,
-	  &QToolButton::clicked,
-	  this,
-	  &luna_day_widget::slot_clicked);
   prepare_fonts();
 }
 
@@ -60,14 +56,43 @@ luna_day_widget::~luna_day_widget()
 {
 }
 
-void luna_day_widget::add_event(const QString &title, const qint64 oid)
+void luna_day_widget::add_event
+(QPushButton *event, const QString &t, const QTime &start, const qint64 oid)
 {
-  auto event = new QPushButton(this);
+  QString title("");
+
+  if(start.isValid())
+    {
+      if(t.isEmpty())
+	title = QString("%1 (%2)").
+	  arg(start.toString("h:mm AP")).
+	  arg(tr("No Title"));
+      else
+	title = QString("%1 (%2)").
+	  arg(start.toString("h:mm AP")).
+	  arg(t);
+    }
+  else if(t.isEmpty())
+    title = tr("No Title");
+  else
+    title = t;
+
+  if(!event)
+    {
+      event = new QPushButton(this);
+      connect(event,
+	      &QPushButton::clicked,
+	      this,
+	      &luna_day_widget::slot_modify);
+      m_events_area->widget()->layout()->addWidget(event);
+      m_events_area->widget()->layout()->setSpacing(1);
+    }
 
   event->setProperty("oid", oid);
-  event->setText(title.isEmpty() ? tr("No Title") : title);
+  event->setProperty("start", start);
+  event->setProperty("title", t);
+  event->setText(title);
   event->setVisible(true);
-  m_events_area->widget()->layout()->addWidget(event);
 }
 
 void luna_day_widget::prepare_fonts(void)
@@ -76,14 +101,8 @@ void luna_day_widget::prepare_fonts(void)
 
   font.setBold(true);
   m_day->setFont(font);
-  m_day->resize(QFontMetrics(m_day->font()).boundingRect("00").size());
-  font = m_events->font();
-  font.setBold(true);
-  font.setPointSize(10 + font.pointSize());
-  m_events->move(50, 5);
-  m_events->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-  m_events->setFont(font);
-  m_events->resize(m_events->sizeHint());
+  m_day->resize
+    (QFontMetrics(m_day->font()).boundingRect("00").size() + QSize(10, 10));
 }
 
 void luna_day_widget::resizeEvent(QResizeEvent *event)
@@ -99,8 +118,10 @@ void luna_day_widget::set_date(const QDate &date)
   if(m_add == nullptr && m_date.isValid())
     {
       m_add = new QToolButton(this);
-      m_add->move(10, 5 + m_day->height());
+      m_add->move(5, 5 + m_day->height());
       m_add->resize(35, 35);
+      m_add->setAutoRaise(true);
+      m_add->setDown(QDate::currentDate() == m_date);
       m_add->setIcon(QIcon(":/32x32/new.svg"));
       m_add->setIconSize(QSize(32, 32));
       m_add->setToolTip(tr("Add Event"));
@@ -114,25 +135,35 @@ void luna_day_widget::set_date(const QDate &date)
 void luna_day_widget::set_day_text(const QString &text)
 {
   m_day->setText(text);
+  prepare_fonts();
 }
 
 void luna_day_widget::slot_add(void)
 {
+  m_add ? m_add->setDown(QDate::currentDate() == m_date) : (void) 0;
+
   luna_event event(this);
 
   event.resize(event.sizeHint());
   event.set_date(m_date);
 
   if(event.exec() == QDialog::Accepted)
-    add_event(event.title(), event.oid());
+    add_event(nullptr, event.title(), event.start(), event.oid());
 }
 
-void luna_day_widget::slot_clicked(void)
+void luna_day_widget::slot_modify(void)
 {
-  if(QDate::currentDate() == m_date)
-    {
-      m_ui.button->blockSignals(true);
-      m_ui.button->setDown(true);
-      m_ui.button->blockSignals(false);
-    }
+  auto button = qobject_cast<QPushButton *> (sender());
+
+  if(!button)
+    return;
+
+  luna_event event(this);
+
+  event.resize(event.sizeHint());
+  event.set_date(m_date);
+  event.set_title(button->property("title").toString());
+
+  if(event.exec() == QDialog::Accepted)
+    add_event(button, event.title(), event.start(), event.oid());
 }

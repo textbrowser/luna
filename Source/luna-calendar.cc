@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     luna_calendar luna;
 
 #ifndef Q_OS_ANDROID
-    luna.show();
+    luna.showFullScreen();
 #else
     luna.showMaximized();
 #endif
@@ -181,7 +181,6 @@ void luna_calendar::prepare_month(const QDate &date)
 	  widget->setEnabled(true);
 	  widget->set_date(QDate(date.year(), date.month(), day));
 	  widget->set_day_text(QString::number(day));
-	  widget->set_down(date.day() == day && today == date);
 	}
       else
 	{
