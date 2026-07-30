@@ -88,6 +88,13 @@ void luna_event::set_date(const QDate &date)
   m_ui.date->setText(date.toString("dddd, MMMM d"));
 }
 
+void luna_event::set_times(const QTime &end, const QTime &start)
+{
+  m_ui.end->setTime(end);
+  m_ui.start->setTime(start);
+  m_ui.time->setChecked(end.isValid() && start.isValid());
+}
+
 void luna_event::set_title(const QString &title)
 {
   m_ui.title->setText(title);

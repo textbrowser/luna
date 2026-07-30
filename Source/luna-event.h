@@ -47,6 +47,7 @@ class luna_event: public QDialog
   QTime start(void) const;
   qint64 oid(void) const;
   void set_date(const QDate &date);
+  void set_times(const QTime &end, const QTime &start);
   void set_title(const QString &title);
 
  private:

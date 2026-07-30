@@ -186,6 +186,8 @@ void luna_day_widget::slot_modify(void)
   event->resize(event->sizeHint());
   event->setModal(false);
   event->set_date(m_date);
+  event->set_times
+    (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
   event->show();
 }
