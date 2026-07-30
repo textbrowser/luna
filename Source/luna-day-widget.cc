@@ -203,6 +203,8 @@ void luna_day_widget::slot_remove(const qint64 oid)
 
   if(button)
     button->deleteLater();
+
+  luna_calendar::remove(oid);
 }
 
 void luna_day_widget::slot_save(void)

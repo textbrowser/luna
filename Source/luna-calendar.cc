@@ -232,6 +232,30 @@ void luna_calendar::prepare_month(const QDate &date)
     }
 }
 
+void luna_calendar::remove(const qint64 oid)
+{
+  QString const connection_name("remove");
+
+  {
+    auto db(QSqlDatabase::addDatabase("QSQLITE", connection_name));
+
+    db.setDatabaseName(home_path() + QDir::separator() + "luna-calendar.db");
+
+    if(db.open())
+      {
+	QSqlQuery query(db);
+
+	query.prepare("DELETE FROM event WHERE identifier = ?");
+	query.addBindValue(oid);
+	query.exec();
+      }
+
+    db.close();
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
+}
+
 void luna_calendar::save(const QDate &date,
 			 const QString &title,
 			 const QTime &end,
