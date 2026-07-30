@@ -32,6 +32,7 @@
 
 #include <QApplication>
 #include <QLabel>
+#include <QMessageBox>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
@@ -87,6 +88,10 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  &QTimer::timeout,
 	  this,
 	  &luna_calendar::slot_clock_timer_timeout);
+  connect(m_ui.action_About,
+	  &QAction::triggered,
+	  this,
+	  &luna_calendar::slot_about);
   connect(m_ui.action_Exit,
 	  &QAction::triggered,
 	  this,
@@ -305,6 +310,33 @@ void luna_calendar::save(const QDate &date,
 
 void luna_calendar::slot_about(void)
 {
+  auto about = findChild<QMessageBox *> ("about");
+
+  if(!about)
+    about = new QMessageBox(this);
+
+  about->setFont(QApplication::font());
+  about->setIconPixmap
+    (QPixmap(":/luna.png").scaled(QSize(128, 128),
+				  Qt::KeepAspectRatio,
+				  Qt::SmoothTransformation));
+  about->setObjectName("about");
+  about->setStandardButtons(QMessageBox::Close);
+  about->setText
+    (tr("<html>Luna Version %1<br>"
+	"Architecture %2.<br>"
+	"Made with love by textbrower.<br>"
+	"Software for and from the margins.").
+     arg(s_version).
+     arg(QSysInfo::currentCpuArchitecture()));
+  about->setTextFormat(Qt::RichText);
+  about->setWindowIcon(windowIcon());
+  about->setWindowModality(Qt::NonModal);
+  about->setWindowTitle(tr("Luna: About"));
+  about->showNormal();
+  about->activateWindow();
+  about->button(QMessageBox::Close)->setShortcut(tr("Ctrl+W"));
+  about->raise();
 }
 
 void luna_calendar::slot_clock_timer_timeout(void)
