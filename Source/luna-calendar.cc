@@ -32,6 +32,8 @@
 
 #include <QApplication>
 #include <QLabel>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "luna-calendar.h"
 #include "luna-day-widget.h"
@@ -115,6 +117,41 @@ luna_calendar::luna_calendar(void):QMainWindow()
 
 luna_calendar::~luna_calendar()
 {
+}
+
+qint64 luna_calendar::oid(void)
+{
+  QString const connection_name("oid");
+  qint64 oid = 0;
+
+  {
+    auto db(QSqlDatabase::addDatabase("QSQLITE", connection_name));
+
+    db.setDatabaseName(home_path() + QDir::separator() + "luna-calendar.db");
+
+    if(db.open())
+      {
+	QSqlQuery query(db);
+
+	query.exec("CREATE TABLE IF NOT EXISTS oid_sequence "
+		   "(value INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)");
+	query.exec("CREATE TRIGGER IF NOT EXISTS oid_sequence_trigger "
+		   "BEFORE INSERT ON oid_sequence "
+		   "BEGIN "
+		   "DELETE FROM oid_sequence; "
+		   "END;");
+
+	if(query.exec("INSERT INTO oid_sequence VALUES (NULL)"))
+	  oid = query.lastInsertId().toLongLong();
+	else if(query.exec("SELECT value FROM oid_sequence") && query.next())
+	  oid = query.value(0).toLongLong();
+      }
+
+    db.close();
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
+  return oid;
 }
 
 void luna_calendar::prepare_fonts(void)

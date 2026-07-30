@@ -55,6 +55,8 @@ class luna_calendar: public QMainWindow
 #endif
   }
 
+  static qint64 oid(void);
+
  private:
   QDate m_date;
   QTimer m_clock_timer;

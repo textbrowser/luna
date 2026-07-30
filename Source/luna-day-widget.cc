@@ -34,6 +34,7 @@
 #include <QScrollArea>
 #include <QToolButton>
 
+#include "luna-calendar.h"
 #include "luna-day-widget.h"
 #include "luna-event.h"
 
@@ -90,6 +91,7 @@ void luna_day_widget::add_event
 	      &luna_day_widget::slot_modify);
       event->setObjectName(QString::number(oid));
       m_events_area->widget()->layout()->addWidget(event);
+      m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
     }
 
@@ -162,6 +164,7 @@ void luna_day_widget::slot_add(void)
   event->resize(event->sizeHint());
   event->setModal(false);
   event->set_date(m_date);
+  event->set_oid(luna_calendar::oid());
   event->show();
 }
 
@@ -186,6 +189,7 @@ void luna_day_widget::slot_modify(void)
   event->resize(event->sizeHint());
   event->setModal(false);
   event->set_date(m_date);
+  event->set_oid(button->property("oid").toLongLong());
   event->set_times
     (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
