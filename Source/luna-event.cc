@@ -36,6 +36,10 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 {
   m_oid = 0;
   m_ui.setupUi(this);
+  connect(m_ui.close,
+	  &QPushButton::clicked,
+	  this,
+	  &luna_event::close);
   connect(m_ui.remove,
 	  &QPushButton::clicked,
 	  this,

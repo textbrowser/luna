@@ -215,6 +215,6 @@ void luna_calendar::slot_select_month(void)
     prepare_month(m_date = m_date.addMonths(1));
   else if(m_ui.previous_month == sender())
     prepare_month(m_date = m_date.addMonths(-1));
-  else
+  else if(QDate::currentDate() != m_date)
     prepare_month(m_date = QDate::currentDate());
 }
