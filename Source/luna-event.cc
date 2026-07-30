@@ -36,6 +36,7 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 {
   m_oid = 0;
   m_ui.setupUi(this);
+  m_ui.time_box->setVisible(false);
   connect(m_ui.close,
 	  &QPushButton::clicked,
 	  this,
@@ -50,12 +51,8 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  &luna_event::slot_save);
   connect(m_ui.time,
 	  SIGNAL(toggled(bool)),
-	  m_ui.end,
-	  SLOT(setEnabled(bool)));
-  connect(m_ui.time,
-	  SIGNAL(toggled(bool)),
-	  m_ui.start,
-	  SLOT(setEnabled(bool)));
+	  m_ui.time_box,
+	  SLOT(setVisible(bool)));
 }
 
 luna_event::~luna_event()
