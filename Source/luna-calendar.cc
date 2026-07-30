@@ -232,6 +232,53 @@ void luna_calendar::prepare_month(const QDate &date)
     }
 }
 
+void luna_calendar::save(const QDate &date,
+			 const QString &title,
+			 const QTime &end,
+			 const QTime &start,
+			 const qint64 oid)
+{
+  QString const connection_name("save");
+
+  {
+    auto db(QSqlDatabase::addDatabase("QSQLITE", connection_name));
+
+    db.setDatabaseName(home_path() + QDir::separator() + "luna-calendar.db");
+
+    if(db.open())
+      {
+	QSqlQuery query(db);
+
+	query.exec("CREATE TABLE IF NOT EXISTS date "
+		   "(date TEXT NOT NULL PRIMARY KEY)");
+	query.exec("CREATE TABLE IF NOT EXISTS event "
+		   "(date TEXT NOT NULL, "
+		   "identifier BIGINT NOT NULL, "
+		   "time_end TEXT, "
+		   "time_start TEXT, "
+		   "title TEXT, "
+		   "PRIMARY KEY (date, identifier))");
+	query.prepare("INSERT OR REPLACE INTO date "
+		      "(date) VALUES (?)");
+	query.addBindValue(date.toString(Qt::ISODate));
+	query.exec();
+	query.prepare("INSERT OR REPLACE INTO event "
+		      "(date, identifier, time_end, time_start, title) "
+		      "VALUES (?, ?, ?, ?, ?)");
+	query.addBindValue(date.toString(Qt::ISODate));
+	query.addBindValue(oid);
+	query.addBindValue(end.toString(Qt::ISODate));
+	query.addBindValue(start.toString(Qt::ISODate));
+	query.addBindValue(title);
+	query.exec();
+      }
+
+    db.close();
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
+}
+
 void luna_calendar::slot_about(void)
 {
 }

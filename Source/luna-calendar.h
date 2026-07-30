@@ -56,6 +56,11 @@ class luna_calendar: public QMainWindow
   }
 
   static qint64 oid(void);
+  static void save(const QDate &date,
+		   const QString &title,
+		   const QTime &end,
+		   const QTime &start,
+		   const qint64 oid);
 
  private:
   QDate m_date;

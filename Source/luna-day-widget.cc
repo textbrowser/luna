@@ -101,6 +101,7 @@ void luna_day_widget::add_event
   event->setProperty("title", t);
   event->setText(title);
   event->setVisible(true);
+  luna_calendar::save(m_date, t, end, start, oid);
 }
 
 void luna_day_widget::prepare_fonts(void)
