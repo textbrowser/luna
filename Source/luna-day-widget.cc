@@ -45,16 +45,17 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
   m_add = nullptr;
   m_day = new QLabel(this);
-  m_day->move(10, 5);
+  m_day->move(10, 0);
   m_day->setEnabled(false);
   m_events_area = new QScrollArea(this);
-  m_events_area->move(50, 10);
+  m_events_area->move(50, 0);
   m_events_area->setStyleSheet("QScrollArea {background: transparent;}");
   m_events_area->setWidget(new QWidget(this));
   m_events_area->setWidgetResizable(true);
   m_events_area->widget()->setLayout(new QVBoxLayout(m_events_area->widget()));
   m_events_area->widget()->setVisible(true);
   m_ui.setupUi(this);
+  m_ui.label->setAttribute(Qt::WA_TransparentForMouseEvents);
   prepare_fonts();
 }
 
@@ -162,7 +163,7 @@ void luna_day_widget::set_date(const QDate &date, const bool add_button)
   if(add_button && m_add == nullptr && m_date.isValid())
     {
       m_add = new QToolButton(this);
-      m_add->move(5, 5 + m_day->height());
+      m_add->move(5, m_day->height());
       m_add->resize(50, 50);
       m_add->setAutoRaise(true);
       m_add->setDown(QDate::currentDate() == m_date);
