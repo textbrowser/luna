@@ -49,7 +49,7 @@ class luna_day_widget: public QWidget
  public:
   luna_day_widget(QWidget *parent);
   ~luna_day_widget();
-  void set_date(const QDate &date);
+  void set_date(const QDate &date, const bool add_button);
   void set_day_text(const QString &text);
 
  private:

@@ -202,6 +202,7 @@ void luna_calendar::prepare_month(const QDate &date)
     }
 
   auto const first = QDate(date.year(), date.month(), 1).dayOfWeek() + 1;
+  auto const next(date.addMonths(1));
   auto const previous(date.addMonths(-1));
   auto const today(QDate::currentDate());
 
@@ -214,22 +215,29 @@ void luna_calendar::prepare_month(const QDate &date)
       auto widget = new luna_day_widget(this);
 
       m_ui.grid->addWidget(widget, row, (i - 1) % 7);
-      widget->setEnabled(false);
       widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
-	  widget->setEnabled(true);
-	  widget->set_date(QDate(date.year(), date.month(), day));
+	  widget->set_date(QDate(date.year(), date.month(), day), true);
 	  widget->set_day_text(QString::number(day));
 	}
       else
 	{
 	  if(date.daysInMonth() <= day)
-	    widget->set_day_text(QString::number(1 - day - first + i));
+	    {
+	      widget->set_date
+		(QDate(next.year(), next.month(), 1 - day - first + i), false);
+	      widget->set_day_text(QString::number(1 - day - first + i));
+	    }
 	  else
-	    widget->set_day_text(QString::number(++j));
+	    {
+	      j += 1;
+	      widget->set_date
+		(QDate(previous.year(), previous.month(), j), false);
+	      widget->set_day_text(QString::number(j));
+	    }
 	}
 
       if(i % 7 == 0)

@@ -46,6 +46,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_add = nullptr;
   m_day = new QLabel(this);
   m_day->move(10, 5);
+  m_day->setEnabled(false);
   m_events_area = new QScrollArea(this);
   m_events_area->move(50, 10);
   m_events_area->setWidget(new QWidget(this));
@@ -131,11 +132,11 @@ void luna_day_widget::resizeEvent(QResizeEvent *event)
   m_events_area->resize(-100 + size().width(), -25 + size().height());
 }
 
-void luna_day_widget::set_date(const QDate &date)
+void luna_day_widget::set_date(const QDate &date, const bool add_button)
 {
   m_date = date;
 
-  if(m_add == nullptr && m_date.isValid())
+  if(add_button && m_add == nullptr && m_date.isValid())
     {
       m_add = new QToolButton(this);
       m_add->move(5, 5 + m_day->height());
@@ -145,6 +146,7 @@ void luna_day_widget::set_date(const QDate &date)
       m_add->setIcon(QIcon(":/64x64/new.png"));
       m_add->setIconSize(QSize(32, 32));
       m_add->setToolTip(tr("Add Event"));
+      m_day->setEnabled(true);
       connect(m_add,
 	      &QToolButton::clicked,
 	      this,
