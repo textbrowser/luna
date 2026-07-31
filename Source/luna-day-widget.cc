@@ -89,11 +89,18 @@ void luna_day_widget::add_event
   if(!event)
     {
       event = new QPushButton(this);
+
+      auto font(event->font());
+
       connect(event,
 	      &QPushButton::clicked,
 	      this,
 	      &luna_day_widget::slot_modify);
+      font.setBold(true);
+      event->setFont(font);
       event->setObjectName(QString::number(oid));
+      event->setStyleSheet
+	("QPushButton {background: rgba(89, 90, 150, 200); color: white;}");
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
@@ -157,11 +164,11 @@ void luna_day_widget::set_date(const QDate &date)
 	QSqlQuery query(db);
 
 	query.setForwardOnly(true);
-	query.prepare("SELECT date, " // 0
-		      "identifier, "  // 1
-		      "time_end, "    // 2
-		      "time_start, "  // 3
-		      "title "        // 4
+	query.prepare("SELECT "
+		      "identifier, " // 0
+		      "time_end, "   // 1
+		      "time_start, " // 2
+		      "title "       // 3
 		      "FROM event WHERE date = ? "
 		      "ORDER BY identifier");
 	query.addBindValue(m_date.toString(Qt::ISODate));
@@ -170,11 +177,11 @@ void luna_day_widget::set_date(const QDate &date)
 	  while(query.next())
 	    {
 	      auto const end
-		(QTime::fromString(query.value(2).toString(), Qt::ISODate));
-	      auto const oid = query.value(1).toLongLong();
+		(QTime::fromString(query.value(1).toString(), Qt::ISODate));
+	      auto const oid = query.value(0).toLongLong();
 	      auto const start
-		(QTime::fromString(query.value(3).toString(), Qt::ISODate));
-	      auto const title(query.value(4).toString().trimmed());
+		(QTime::fromString(query.value(2).toString(), Qt::ISODate));
+	      auto const title(query.value(3).toString().trimmed());
 
 	      add_event(nullptr, title, end, start, false, oid);
 	    }
