@@ -58,6 +58,7 @@ class luna_calendar: public QMainWindow
   static qint64 oid(void);
   static void remove(const qint64 oid);
   static void save(const QDate &date,
+		   const QHash<QString, QVariant> &properties,
 		   const QString &title,
 		   const QTime &end,
 		   const QTime &start,

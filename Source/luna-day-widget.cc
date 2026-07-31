@@ -63,6 +63,7 @@ luna_day_widget::~luna_day_widget()
 
 void luna_day_widget::add_event
 (QPushButton *event,
+ const QHash<QString, QVariant> &properties,
  const QString &t,
  const QTime &end,
  const QTime &start,
@@ -113,7 +114,7 @@ void luna_day_widget::add_event
   event->setProperty("title", t);
   event->setText(title);
   event->setVisible(true);
-  save ? luna_calendar::save(m_date, t, end, start, oid) : (void) 0;
+  save ? luna_calendar::save(m_date, properties, t, end, start, oid) : (void) 0;
 }
 
 void luna_day_widget::prepare_fonts(void)
@@ -167,6 +168,8 @@ void luna_day_widget::set_date(const QDate &date, const bool add_button)
 
 	query.setForwardOnly(true);
 	query.prepare("SELECT "
+		      "color_background, "
+		      "color_text, "
 		      "identifier, " // 0
 		      "time_end, "   // 1
 		      "time_start, " // 2
@@ -178,14 +181,21 @@ void luna_day_widget::set_date(const QDate &date, const bool add_button)
 	if(query.exec())
 	  while(query.next())
 	    {
+	      QHash<QString, QVariant> properties;
 	      auto const end
-		(QTime::fromString(query.value(1).toString(), Qt::ISODate));
-	      auto const oid = query.value(0).toLongLong();
+		(QTime::
+		 fromString(query.value("time_end").toString(), Qt::ISODate));
+	      auto const oid = query.value("identifier").toLongLong();
 	      auto const start
-		(QTime::fromString(query.value(2).toString(), Qt::ISODate));
-	      auto const title(query.value(3).toString().trimmed());
+		(QTime::
+		 fromString(query.value("time_start").toString(), Qt::ISODate));
+	      auto const title(query.value("title").toString().trimmed());
 
-	      add_event(nullptr, title, end, start, false, oid);
+	      properties["color_background"] = QColor
+		(query.value("color_background").toString().trimmed());
+	      properties["color_text"] = QColor
+		(query.value("color_text").toString().trimmed());
+	      add_event(nullptr, properties, title, end, start, false, oid);
 	    }
       }
 
@@ -268,9 +278,15 @@ void luna_day_widget::slot_save(void)
   if(!event)
     return;
 
+  QHash<QString, QVariant> properties;
   auto button = m_events_area->findChild<QPushButton *>
     (QString::number(event->oid()));
 
-  add_event
-    (button, event->title(), event->end(), event->start(), true, event->oid());
+  add_event(button,
+	    properties,
+	    event->title(),
+	    event->end(),
+	    event->start(),
+	    true,
+	    event->oid());
 }

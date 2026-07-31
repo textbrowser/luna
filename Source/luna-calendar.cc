@@ -272,6 +272,7 @@ void luna_calendar::remove(const qint64 oid)
 }
 
 void luna_calendar::save(const QDate &date,
+			 const QHash<QString, QVariant> &properties,
 			 const QString &title,
 			 const QTime &end,
 			 const QTime &start,
@@ -290,20 +291,33 @@ void luna_calendar::save(const QDate &date,
 
 	query.exec("CREATE TABLE IF NOT EXISTS date "
 		   "(date TEXT NOT NULL PRIMARY KEY)");
-	query.exec("CREATE TABLE IF NOT EXISTS event "
-		   "(date TEXT NOT NULL, "
+	query.exec("CREATE TABLE IF NOT EXISTS event ("
+		   "color_background TEXT NOT NULL, "
+		   "color_text TEXT NOT NULL, "
+		   "date TEXT NOT NULL, "
 		   "identifier BIGINT NOT NULL, "
 		   "time_end TEXT, "
 		   "time_start TEXT, "
 		   "title TEXT, "
 		   "PRIMARY KEY (date, identifier))");
-	query.prepare("INSERT OR REPLACE INTO date "
-		      "(date) VALUES (?)");
+	query.prepare("INSERT OR REPLACE INTO date (date) VALUES (?)");
 	query.addBindValue(date.toString(Qt::ISODate));
 	query.exec();
-	query.prepare("INSERT OR REPLACE INTO event "
-		      "(date, identifier, time_end, time_start, title) "
-		      "VALUES (?, ?, ?, ?, ?)");
+	query.prepare("INSERT OR REPLACE INTO event ("
+		      "color_background, "
+		      "color_text, "
+		      "date, "
+		      "identifier, "
+		      "time_end, "
+		      "time_start, "
+		      "title) "
+		      "VALUES (?, ?, ?, ?, ?, ?, ?)");
+	query.addBindValue
+	  (properties.value("color_background").value<QColor> ().
+	   name(QColor::HexArgb));
+	query.addBindValue
+	  (properties.value("color_text").value<QColor> ().
+	   name(QColor::HexArgb));
 	query.addBindValue(date.toString(Qt::ISODate));
 	query.addBindValue(oid);
 	query.addBindValue(end.toString(Qt::ISODate));

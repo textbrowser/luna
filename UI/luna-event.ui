@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>250</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,6 +76,29 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="colors_box">
+     <property name="title">
+      <string>Colors</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="background_color">
+        <property name="text">
+         <string>Background</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="text_color">
+        <property name="text">
+         <string>Text</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <widget class="QLineEdit" name="title">
@@ -215,6 +238,8 @@
  <tabstops>
   <tabstop>remove</tabstop>
   <tabstop>close</tabstop>
+  <tabstop>background_color</tabstop>
+  <tabstop>text_color</tabstop>
   <tabstop>title</tabstop>
   <tabstop>time</tabstop>
   <tabstop>start</tabstop>

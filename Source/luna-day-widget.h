@@ -59,6 +59,7 @@ class luna_day_widget: public QWidget
   QToolButton *m_add;
   Ui_luna_day_widget m_ui;
   void add_event(QPushButton *button,
+		 const QHash<QString, QVariant> &properties,
 		 const QString &t,
 		 const QTime &end,
 		 const QTime &time,
