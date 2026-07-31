@@ -91,41 +91,38 @@ void luna_day_widget::add_event
   if(!event)
     {
       event = new QPushButton(this);
-
-      auto color_background
-	(properties.value("color_background").value<QColor> ());
-      auto color_text
-	(properties.value("color_text").value<QColor> ());
-      auto font(event->font());
-
-      if(!color_background.isValid())
-	color_background = QColor(89, 90, 150, 200);
-
-      if(!color_text.isValid())
-	color_text = QColor(Qt::white);
-
       connect(event,
 	      &QPushButton::clicked,
 	      this,
 	      &luna_day_widget::slot_modify);
-      font.setBold(true);
-      event->setFont(font);
-      event->setObjectName(QString::number(oid));
-      event->setProperty("color_background", color_background);
-      event->setProperty("color_text", color_text);
-      event->setStyleSheet
-	(QString("QPushButton {background: %1; color: %2;}").
-	 arg(color_background.name(QColor::HexArgb)).
-	 arg(color_text.name(QColor::HexArgb)));
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
+      prepare_fonts();
     }
 
+  auto color_background
+    (properties.value("color_background").value<QColor> ());
+  auto color_text
+    (properties.value("color_text").value<QColor> ());
+
+  if(!color_background.isValid())
+    color_background = QColor(89, 90, 150, 200);
+
+  if(!color_text.isValid())
+    color_text = QColor(Qt::white);
+
+  event->setObjectName(QString::number(oid));
+  event->setProperty("color_background", color_background);
+  event->setProperty("color_text", color_text);
   event->setProperty("end", end);
   event->setProperty("oid", oid);
   event->setProperty("start", start);
   event->setProperty("title", t);
+  event->setStyleSheet
+    (QString("QPushButton {background: %1; color: %2;}").
+     arg(color_background.name(QColor::HexArgb)).
+     arg(color_text.name(QColor::HexArgb)));
   event->setText(title);
   event->setVisible(true);
   save ? luna_calendar::save(m_date, properties, t, end, start, oid) : (void) 0;
@@ -133,6 +130,16 @@ void luna_day_widget::add_event
 
 void luna_day_widget::prepare_fonts(void)
 {
+  for(int i = 0; i < m_events_area->widget()->layout()->count(); i++)
+    {
+      QFont font;
+      auto widget = m_events_area->widget()->layout()->itemAt(i)->widget();
+
+      font = widget->font();
+      font.setBold(true);
+      widget->setFont(font);
+    }
+
   auto font(m_day->font());
 
   font.setBold(true);
