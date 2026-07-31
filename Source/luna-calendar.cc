@@ -380,7 +380,7 @@ void luna_calendar::slot_about(void)
 
 void luna_calendar::slot_clock_timer_timeout(void)
 {
-  m_ui.clock->setText(QDateTime::currentDateTime().toString("hh:mm:ss"));
+  m_ui.clock->setText(QDateTime::currentDateTime().toString("h:mm:ss AP"));
 }
 
 void luna_calendar::slot_exit(void)
