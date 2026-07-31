@@ -66,6 +66,7 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  SLOT(setVisible(bool)));
   luna_calendar::assign_image(m_ui.color_background, QColor(89, 90, 150, 200));
   luna_calendar::assign_image(m_ui.color_text, QColor(Qt::white));
+  m_ui.title->setFocus();
 }
 
 luna_event::~luna_event()
