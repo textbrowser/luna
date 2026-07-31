@@ -173,7 +173,7 @@ LIBS +=
 MOC_DIR     = Temporary/moc
 OBJECTS_DIR = Temporary/obj
 RCC_DIR     = Temporary/rcc
-RESOURCES   = Documentation/documentation.qrc Icons/icons.qrc
+RESOURCES   = Icons/icons.qrc
 UI_DIR      = Temporary/ui
 
 FORMS   += UI/luna-calendar.ui \
