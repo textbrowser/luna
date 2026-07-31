@@ -76,14 +76,17 @@ void luna_day_widget::add_event
 
   if(start.isValid())
     {
-      if(t.isEmpty())
-	title = QString("%1 (%2)").
-	  arg(start.toString("h:mm AP")).
-	  arg(tr("No Title"));
+      QString s("");
+
+      if(start.minute() == 0)
+	s = start.toString("h AP");
       else
-	title = QString("%1 (%2)").
-	  arg(start.toString("h:mm AP")).
-	  arg(t);
+	s = start.toString("h:mm AP");
+
+      if(t.isEmpty())
+	title = QString("%1 (%2)").arg(s).arg(tr("No Title"));
+      else
+	title = QString("%1 (%2)").arg(s).arg(t);
     }
   else if(t.isEmpty())
     title = tr("No Title");
