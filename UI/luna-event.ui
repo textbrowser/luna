@@ -85,6 +85,12 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QPushButton" name="color_background">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Background</string>
         </property>
@@ -92,6 +98,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="color_text">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string>Text</string>
         </property>

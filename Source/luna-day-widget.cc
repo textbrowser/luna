@@ -46,6 +46,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_add = nullptr;
   m_day = new QLabel(this);
   m_day->move(10, 0);
+  m_day->setAlignment(Qt::AlignCenter);
   m_day->setEnabled(false);
   m_events_area = new QScrollArea(this);
   m_events_area->move(50, 0);
@@ -150,7 +151,7 @@ void luna_day_widget::prepare_fonts(void)
   font.setBold(true);
   m_day->setFont(font);
   m_day->resize
-    (QFontMetrics(m_day->font()).boundingRect("00").size() + QSize(10, 10));
+    (QFontMetrics(m_day->font()).boundingRect("AA").size() + QSize(10, 10));
 }
 
 void luna_day_widget::resizeEvent(QResizeEvent *event)
