@@ -253,6 +253,8 @@ void luna_calendar::remove(const qint64 oid)
 	query.prepare("DELETE FROM event WHERE identifier = ?");
 	query.addBindValue(oid);
 	query.exec();
+	query.exec
+	  ("DELETE FROM date WHERE date NOT IN (SELECT date FROM event)");
       }
 
     db.close();

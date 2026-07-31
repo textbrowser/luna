@@ -30,8 +30,11 @@
      OF LUNA, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QDir>
 #include <QLabel>
 #include <QScrollArea>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 #include <QToolButton>
 
 #include "luna-calendar.h"
@@ -62,6 +65,7 @@ void luna_day_widget::add_event
  const QString &t,
  const QTime &end,
  const QTime &start,
+ const bool save,
  const qint64 oid)
 {
   QString title("");
@@ -101,7 +105,7 @@ void luna_day_widget::add_event
   event->setProperty("title", t);
   event->setText(title);
   event->setVisible(true);
-  luna_calendar::save(m_date, t, end, start, oid);
+  save ? luna_calendar::save(m_date, t, end, start, oid) : (void) 0;
 }
 
 void luna_day_widget::prepare_fonts(void)
@@ -139,6 +143,47 @@ void luna_day_widget::set_date(const QDate &date)
 	      this,
 	      &luna_day_widget::slot_add);
     }
+
+  QString const connection_name("set_date");
+
+  {
+    auto db(QSqlDatabase::addDatabase("QSQLITE", connection_name));
+
+    db.setDatabaseName
+      (luna_calendar::home_path() + QDir::separator() + "luna-calendar.db");
+
+    if(db.open())
+      {
+	QSqlQuery query(db);
+
+	query.setForwardOnly(true);
+	query.prepare("SELECT date, " // 0
+		      "identifier, "  // 1
+		      "time_end, "    // 2
+		      "time_start, "  // 3
+		      "title "        // 4
+		      "FROM event WHERE date = ? "
+		      "ORDER BY identifier");
+	query.addBindValue(m_date.toString(Qt::ISODate));
+
+	if(query.exec())
+	  while(query.next())
+	    {
+	      auto const end
+		(QTime::fromString(query.value(2).toString(), Qt::ISODate));
+	      auto const oid = query.value(1).toLongLong();
+	      auto const start
+		(QTime::fromString(query.value(3).toString(), Qt::ISODate));
+	      auto const title(query.value(4).toString().trimmed());
+
+	      add_event(nullptr, title, end, start, false, oid);
+	    }
+      }
+
+    db.close();
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
 }
 
 void luna_day_widget::set_day_text(const QString &text)
@@ -217,5 +262,6 @@ void luna_day_widget::slot_save(void)
   auto button = m_events_area->findChild<QPushButton *>
     (QString::number(event->oid()));
 
-  add_event(button, event->title(), event->end(), event->start(), event->oid());
+  add_event
+    (button, event->title(), event->end(), event->start(), true, event->oid());
 }

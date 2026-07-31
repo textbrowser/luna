@@ -62,6 +62,7 @@ class luna_day_widget: public QWidget
 		 const QString &t,
 		 const QTime &end,
 		 const QTime &time,
+		 const bool save,
 		 const qint64 oid);
   void prepare_fonts(void);
   void resizeEvent(QResizeEvent *event);
