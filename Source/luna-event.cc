@@ -30,6 +30,8 @@
      OF LUNA, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QColorDialog>
+
 #include "luna-calendar.h"
 #include "luna-event.h"
 
@@ -42,6 +44,14 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  &QPushButton::clicked,
 	  this,
 	  &luna_event::close);
+  connect(m_ui.color_background,
+	  &QPushButton::clicked,
+	  this,
+	  &luna_event::slot_select_color);
+  connect(m_ui.color_text,
+	  &QPushButton::clicked,
+	  this,
+	  &luna_event::slot_select_color);
   connect(m_ui.remove,
 	  &QPushButton::clicked,
 	  this,
@@ -125,4 +135,20 @@ void luna_event::slot_save(void)
 {
   emit save();
   accept();
+}
+
+void luna_event::slot_select_color(void)
+{
+  auto button = qobject_cast<QPushButton *> (sender());
+
+  if(!button)
+    return;
+
+  QColorDialog dialog(this);
+  auto const color(button->property("color").value<QColor> ());
+
+  dialog.setCurrentColor(color);
+
+  if(dialog.exec() == QDialog::Accepted)
+    luna_calendar::assign_image(button, dialog.selectedColor());
 }
