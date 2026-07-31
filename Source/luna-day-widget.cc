@@ -128,10 +128,10 @@ void luna_day_widget::set_date(const QDate &date)
     {
       m_add = new QToolButton(this);
       m_add->move(5, 5 + m_day->height());
-      m_add->resize(35, 35);
+      m_add->resize(50, 50);
       m_add->setAutoRaise(true);
       m_add->setDown(QDate::currentDate() == m_date);
-      m_add->setIcon(QIcon(":/32x32/new.svg"));
+      m_add->setIcon(QIcon(":/64x64/new.png"));
       m_add->setIconSize(QSize(32, 32));
       m_add->setToolTip(tr("Add Event"));
       connect(m_add,

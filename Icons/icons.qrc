@@ -2,7 +2,7 @@
     <qresource prefix="/">
 	<file>32x32/close.svg</file>
 	<file>32x32/delete.svg</file>
-	<file>32x32/new.svg</file>
+	<file>64x64/new.png</file>
 	<file>luna.png</file>
     </qresource>
 </RCC>
