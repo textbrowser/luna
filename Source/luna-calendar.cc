@@ -33,6 +33,8 @@
 #include <QApplication>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPainter>
+#include <QPushButton>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
@@ -157,6 +159,19 @@ qint64 luna_calendar::oid(void)
 
   QSqlDatabase::removeDatabase(connection_name);
   return oid;
+}
+
+void luna_calendar::assign_image(QPushButton *button, const QColor &color)
+{
+  if(!button)
+    return;
+
+  QImage image(QSize(16, 16), QImage::Format_ARGB32);
+  QPainter painter(&image);
+
+  image.fill(color);
+  button->setIcon(QPixmap::fromImage(image));
+  button->setProperty("color", color);
 }
 
 void luna_calendar::prepare_fonts(void)

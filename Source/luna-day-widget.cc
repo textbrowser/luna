@@ -92,7 +92,17 @@ void luna_day_widget::add_event
     {
       event = new QPushButton(this);
 
+      auto color_background
+	(properties.value("color_background").value<QColor> ());
+      auto color_text
+	(properties.value("text_background").value<QColor> ());
       auto font(event->font());
+
+      if(!color_background.isValid())
+	color_background = QColor(89, 90, 150, 200);
+
+      if(!color_text.isValid())
+	color_text = QColor(Qt::white);
 
       connect(event,
 	      &QPushButton::clicked,
@@ -102,7 +112,9 @@ void luna_day_widget::add_event
       event->setFont(font);
       event->setObjectName(QString::number(oid));
       event->setStyleSheet
-	("QPushButton {background: rgba(89, 90, 150, 200); color: white;}");
+	(QString("QPushButton {background: %1; color: %2;}").
+	 arg(color_background.name(QColor::HexArgb)).
+	 arg(color_text.name(QColor::HexArgb)));
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
@@ -170,10 +182,10 @@ void luna_day_widget::set_date(const QDate &date, const bool add_button)
 	query.prepare("SELECT "
 		      "color_background, "
 		      "color_text, "
-		      "identifier, " // 0
-		      "time_end, "   // 1
-		      "time_start, " // 2
-		      "title "       // 3
+		      "identifier, "
+		      "time_end, "
+		      "time_start, "
+		      "title "
 		      "FROM event WHERE date = ? "
 		      "ORDER BY identifier");
 	query.addBindValue(m_date.toString(Qt::ISODate));
@@ -282,6 +294,8 @@ void luna_day_widget::slot_save(void)
   auto button = m_events_area->findChild<QPushButton *>
     (QString::number(event->oid()));
 
+  properties["color_background"] = event->color_background();
+  properties["color_text"] = event->color_text();
   add_event(button,
 	    properties,
 	    event->title(),

@@ -30,6 +30,7 @@
      OF LUNA, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "luna-calendar.h"
 #include "luna-event.h"
 
 luna_event::luna_event(QWidget *parent):QDialog(parent)
@@ -53,10 +54,22 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  SIGNAL(toggled(bool)),
 	  m_ui.time_box,
 	  SLOT(setVisible(bool)));
+  luna_calendar::assign_image(m_ui.color_background, QColor(89, 90, 150, 200));
+  luna_calendar::assign_image(m_ui.color_text, QColor(Qt::white));
 }
 
 luna_event::~luna_event()
 {
+}
+
+QColor luna_event::color_background(void) const
+{
+  return m_ui.color_background->property("color").value<QColor> ();
+}
+
+QColor luna_event::color_text(void) const
+{
+  return m_ui.color_text->property("color").value<QColor> ();
 }
 
 QString luna_event::title(void) const

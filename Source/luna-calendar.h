@@ -38,6 +38,8 @@
 
 #include "ui_luna-calendar.h"
 
+class QPushButton;
+
 class luna_calendar: public QMainWindow
 {
   Q_OBJECT
@@ -56,6 +58,7 @@ class luna_calendar: public QMainWindow
   }
 
   static qint64 oid(void);
+  static void assign_image(QPushButton *button, const QColor &color);
   static void remove(const qint64 oid);
   static void save(const QDate &date,
 		   const QHash<QString, QVariant> &properties,
