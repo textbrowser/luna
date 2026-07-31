@@ -49,6 +49,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_day->setEnabled(false);
   m_events_area = new QScrollArea(this);
   m_events_area->move(50, 10);
+  m_events_area->setStyleSheet("QScrollArea {background: transparent;}");
   m_events_area->setWidget(new QWidget(this));
   m_events_area->setWidgetResizable(true);
   m_events_area->widget()->setLayout(new QVBoxLayout(m_events_area->widget()));
@@ -151,7 +152,7 @@ void luna_day_widget::prepare_fonts(void)
 void luna_day_widget::resizeEvent(QResizeEvent *event)
 {
   QWidget::resizeEvent(event);
-  m_events_area->resize(-100 + size().width(), -25 + size().height());
+  m_events_area->resize(-50 + size().width(), -15 + size().height());
 }
 
 void luna_day_widget::set_date(const QDate &date, const bool add_button)
