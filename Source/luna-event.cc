@@ -113,6 +113,14 @@ void luna_event::set_oid(const qint64 oid)
   m_oid = oid;
 }
 
+void luna_event::set_property(const QString &name, const QVariant &value)
+{
+  if(name == "color_background")
+    luna_calendar::assign_image(m_ui.color_background, value.value<QColor> ());
+  else if(name == "color_text")
+    luna_calendar::assign_image(m_ui.color_text, value.value<QColor> ());
+}
+
 void luna_event::set_times(const QTime &end, const QTime &start)
 {
   m_ui.end->setTime(end);

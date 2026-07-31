@@ -95,7 +95,7 @@ void luna_day_widget::add_event
       auto color_background
 	(properties.value("color_background").value<QColor> ());
       auto color_text
-	(properties.value("text_background").value<QColor> ());
+	(properties.value("color_text").value<QColor> ());
       auto font(event->font());
 
       if(!color_background.isValid())
@@ -111,6 +111,8 @@ void luna_day_widget::add_event
       font.setBold(true);
       event->setFont(font);
       event->setObjectName(QString::number(oid));
+      event->setProperty("color_background", color_background);
+      event->setProperty("color_text", color_text);
       event->setStyleSheet
 	(QString("QPushButton {background: %1; color: %2;}").
 	 arg(color_background.name(QColor::HexArgb)).
@@ -267,6 +269,8 @@ void luna_day_widget::slot_modify(void)
   event->setModal(false);
   event->set_date(m_date);
   event->set_oid(button->property("oid").toLongLong());
+  event->set_property("color_background", button->property("color_background"));
+  event->set_property("color_text", button->property("color_text"));
   event->set_times
     (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
