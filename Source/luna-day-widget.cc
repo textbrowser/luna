@@ -99,10 +99,10 @@ void luna_day_widget::add_event
 	      &QPushButton::clicked,
 	      this,
 	      &luna_day_widget::slot_modify);
+      event->setProperty("done", properties.value("done"));
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
-      prepare_fonts();
     }
 
   auto color_background
@@ -119,6 +119,7 @@ void luna_day_widget::add_event
   event->setObjectName(QString::number(oid));
   event->setProperty("color_background", color_background);
   event->setProperty("color_text", color_text);
+  event->setProperty("done", properties.value("done"));
   event->setProperty("end", end);
   event->setProperty("oid", oid);
   event->setProperty("start", start);
@@ -129,6 +130,7 @@ void luna_day_widget::add_event
      arg(color_text.name(QColor::HexArgb)));
   event->setText(title);
   event->setVisible(true);
+  prepare_fonts();
   save ? luna_calendar::save(m_date, properties, t, end, start, oid) : (void) 0;
 }
 
@@ -147,6 +149,7 @@ void luna_day_widget::prepare_fonts(void)
 
       font = widget->font();
       font.setBold(true);
+      font.setStrikeOut(widget->property("done").toBool());
       widget->setFont(font);
     }
 
@@ -190,6 +193,7 @@ void luna_day_widget::set_date(const QDate &date, const bool enabled)
 	query.prepare("SELECT "
 		      "color_background, "
 		      "color_text, "
+		      "done, "
 		      "identifier, "
 		      "time_end, "
 		      "time_start, "
@@ -215,6 +219,7 @@ void luna_day_widget::set_date(const QDate &date, const bool enabled)
 		(query.value("color_background").toString().trimmed());
 	      properties["color_text"] = QColor
 		(query.value("color_text").toString().trimmed());
+	      properties["done"] = query.value("done").toBool();
 	      add_event(nullptr, properties, title, end, start, false, oid);
 	    }
       }
@@ -275,6 +280,7 @@ void luna_day_widget::slot_modify(void)
   event->set_oid(button->property("oid").toLongLong());
   event->set_property("color_background", button->property("color_background"));
   event->set_property("color_text", button->property("color_text"));
+  event->set_property("done", button->property("done"));
   event->set_times
     (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
@@ -304,6 +310,7 @@ void luna_day_widget::slot_save(void)
 
   properties["color_background"] = event->color_background();
   properties["color_text"] = event->color_text();
+  properties["done"] = event->is_done();
   add_event(button,
 	    properties,
 	    event->title(),

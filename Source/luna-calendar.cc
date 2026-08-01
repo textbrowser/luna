@@ -122,6 +122,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
   m_ui.next_month->setAutoRaise(true);
   m_ui.previous_month->setAutoRaise(true);
   m_ui.today->setAutoRaise(true);
+  prepare_database();
   prepare_fonts();
   prepare_month(m_date = QDate::currentDate());
 }
@@ -176,6 +177,28 @@ void luna_calendar::assign_image(QPushButton *button, const QColor &color)
   image.fill(color);
   button->setIcon(QPixmap::fromImage(image));
   button->setProperty("color", color);
+}
+
+void luna_calendar::prepare_database(void)
+{
+  QString const connection_name("prepare_database");
+
+  {
+    auto db(QSqlDatabase::addDatabase("QSQLITE", connection_name));
+
+    db.setDatabaseName(home_path() + QDir::separator() + "luna-calendar.db");
+
+    if(db.open())
+      {
+	QSqlQuery query(db);
+
+	query.exec("ALTER TABLE event ADD done INTEGER NOT NULL DEFAULT 0");
+      }
+
+    db.close();
+  }
+
+  QSqlDatabase::removeDatabase(connection_name);
 }
 
 void luna_calendar::prepare_fonts(void)
@@ -316,6 +339,7 @@ void luna_calendar::save(const QDate &date,
 		   "color_background TEXT NOT NULL, "
 		   "color_text TEXT NOT NULL, "
 		   "date TEXT NOT NULL, "
+		   "done INTEGER NOT NULL DEFAULT 0, "
 		   "identifier BIGINT NOT NULL, "
 		   "time_end TEXT, "
 		   "time_start TEXT, "
@@ -328,11 +352,12 @@ void luna_calendar::save(const QDate &date,
 		      "color_background, "
 		      "color_text, "
 		      "date, "
+		      "done, "
 		      "identifier, "
 		      "time_end, "
 		      "time_start, "
 		      "title) "
-		      "VALUES (?, ?, ?, ?, ?, ?, ?)");
+		      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 	query.addBindValue
 	  (properties.value("color_background").value<QColor> ().
 	   name(QColor::HexArgb));
@@ -340,6 +365,7 @@ void luna_calendar::save(const QDate &date,
 	  (properties.value("color_text").value<QColor> ().
 	   name(QColor::HexArgb));
 	query.addBindValue(date.toString(Qt::ISODate));
+	query.addBindValue(properties.value("done").toBool());
 	query.addBindValue(oid);
 	query.addBindValue(end.toString(Qt::ISODate));
 	query.addBindValue(start.toString(Qt::ISODate));

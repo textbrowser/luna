@@ -98,6 +98,11 @@ QTime luna_event::start(void) const
   return m_ui.time->isChecked() ? m_ui.start->time() : QTime();
 }
 
+bool luna_event::is_done(void) const
+{
+  return m_ui.done->isChecked();
+}
+
 qint64 luna_event::oid(void) const
 {
   return m_oid;
@@ -120,6 +125,8 @@ void luna_event::set_property(const QString &name, const QVariant &value)
     luna_calendar::assign_image(m_ui.color_background, value.value<QColor> ());
   else if(name == "color_text")
     luna_calendar::assign_image(m_ui.color_text, value.value<QColor> ());
+  else if(name == "done")
+    m_ui.done->setChecked(value.toBool());
 }
 
 void luna_event::set_times(const QTime &end, const QTime &start)
