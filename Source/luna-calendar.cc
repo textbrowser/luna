@@ -115,6 +115,8 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  this,
 	  &luna_calendar::slot_select_month);
   m_clock_timer.start(1000);
+  m_ui.action_About->setIcon(QIcon::fromTheme("help-about"));
+  m_ui.action_Exit->setIcon(QIcon::fromTheme("application-exit"));
   m_ui.clock->clear();
   m_ui.grid->setHorizontalSpacing(0);
   m_ui.grid->setSpacing(0);
@@ -415,11 +417,19 @@ void luna_calendar::slot_about_to_show_view_menu(void)
   m_ui.menu_View->clear();
 
   if(isFullScreen())
-    m_ui.menu_View->addAction
-      (tr("Normal"), this, &luna_calendar::showNormal);
+    {
+      auto action = m_ui.menu_View->addAction
+	(tr("Normal"), this, &luna_calendar::showNormal);
+
+      action->setIcon(QIcon::fromTheme("view-restore"));
+    }
   else
-    m_ui.menu_View->addAction
-      (tr("Full Screen"), this, &luna_calendar::showFullScreen);
+    {
+      auto action = m_ui.menu_View->addAction
+	(tr("Full Screen"), this, &luna_calendar::showFullScreen);
+
+      action->setIcon(QIcon::fromTheme("view-fullscreen"));
+    }
 }
 
 void luna_calendar::slot_clock_timer_timeout(void)

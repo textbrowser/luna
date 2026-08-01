@@ -66,6 +66,8 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  SLOT(setVisible(bool)));
   luna_calendar::assign_image(m_ui.color_background, QColor(89, 90, 150, 200));
   luna_calendar::assign_image(m_ui.color_text, QColor(Qt::white));
+  m_ui.save->setIcon(QIcon::fromTheme("document-save"));
+  m_ui.time->setIcon(QIcon::fromTheme("appointment-new"));
   m_ui.title->setFocus();
 }
 
@@ -164,6 +166,7 @@ void luna_event::slot_select_color(void)
   auto const color(button->property("color").value<QColor> ());
 
   dialog.setCurrentColor(color);
+  dialog.setOption(QColorDialog::ShowAlphaChannel);
 
   if(dialog.exec() == QDialog::Accepted)
     luna_calendar::assign_image(button, dialog.selectedColor());
