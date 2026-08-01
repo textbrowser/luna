@@ -201,6 +201,7 @@ void luna_calendar::prepare_database(void)
 	QSqlQuery query(db);
 
 	query.exec("ALTER TABLE event ADD done INTEGER NOT NULL DEFAULT 0");
+	query.exec("ALTER TABLE event ADD notes TEXT");
       }
 
     db.close();
@@ -349,6 +350,7 @@ void luna_calendar::save(const QDate &date,
 		   "date TEXT NOT NULL, "
 		   "done INTEGER NOT NULL DEFAULT 0, "
 		   "identifier BIGINT NOT NULL, "
+		   "notes TEXT, "
 		   "time_end TEXT, "
 		   "time_start TEXT, "
 		   "title TEXT, "
@@ -362,10 +364,11 @@ void luna_calendar::save(const QDate &date,
 		      "date, "
 		      "done, "
 		      "identifier, "
+		      "notes, "
 		      "time_end, "
 		      "time_start, "
 		      "title) "
-		      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+		      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 	query.addBindValue
 	  (properties.value("color_background").value<QColor> ().
 	   name(QColor::HexArgb));
@@ -375,6 +378,7 @@ void luna_calendar::save(const QDate &date,
 	query.addBindValue(date.toString(Qt::ISODate));
 	query.addBindValue(properties.value("done").toBool());
 	query.addBindValue(oid);
+	query.addBindValue(properties.value("notes").toString().trimmed());
 	query.addBindValue(end.toString(Qt::ISODate));
 	query.addBindValue(start.toString(Qt::ISODate));
 	query.addBindValue(title);

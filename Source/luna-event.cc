@@ -39,6 +39,8 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 {
   m_oid = 0;
   m_ui.setupUi(this);
+  m_ui.close->setShortcut(tr("Ctrl+W"));
+  m_ui.notes->setVisible(false);
   m_ui.time_box->setVisible(false);
   connect(m_ui.close,
 	  &QPushButton::clicked,
@@ -60,6 +62,10 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  &QPushButton::clicked,
 	  this,
 	  &luna_event::slot_save);
+  connect(m_ui.set_notes,
+	  SIGNAL(toggled(bool)),
+	  m_ui.notes,
+	  SLOT(setVisible(bool)));
   connect(m_ui.time,
 	  SIGNAL(toggled(bool)),
 	  m_ui.time_box,
@@ -83,6 +89,11 @@ QColor luna_event::color_background(void) const
 QColor luna_event::color_text(void) const
 {
   return m_ui.color_text->property("color").value<QColor> ();
+}
+
+QString luna_event::notes(void) const
+{
+  return m_ui.notes->toPlainText().trimmed();
 }
 
 QString luna_event::title(void) const
@@ -129,6 +140,12 @@ void luna_event::set_property(const QString &name, const QVariant &value)
     luna_calendar::assign_image(m_ui.color_text, value.value<QColor> ());
   else if(name == "done")
     m_ui.done->setChecked(value.toBool());
+  else if(name == "notes")
+    {
+      m_ui.notes->setPlainText(value.toString().trimmed());
+      m_ui.set_notes->setChecked
+	(!m_ui.notes->toPlainText().trimmed().isEmpty());
+    }
 }
 
 void luna_event::set_times(const QTime &end, const QTime &start)

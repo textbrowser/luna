@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>342</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -153,6 +153,16 @@
       </spacer>
      </item>
      <item>
+      <widget class="QToolButton" name="set_notes">
+       <property name="text">
+        <string>Set Notes</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QToolButton" name="time">
        <property name="text">
         <string>Set Time</string>
@@ -166,6 +176,16 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="notes">
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Notes</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QGroupBox" name="time_box">
@@ -265,7 +285,9 @@
   <tabstop>color_background</tabstop>
   <tabstop>color_text</tabstop>
   <tabstop>title</tabstop>
+  <tabstop>set_notes</tabstop>
   <tabstop>time</tabstop>
+  <tabstop>notes</tabstop>
   <tabstop>start</tabstop>
   <tabstop>end</tabstop>
   <tabstop>done</tabstop>

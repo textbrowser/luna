@@ -44,6 +44,7 @@ class luna_event: public QDialog
   ~luna_event();
   QColor color_background(void) const;
   QColor color_text(void) const;
+  QString notes(void) const;
   QString title(void) const;
   QTime end(void) const;
   QTime start(void) const;

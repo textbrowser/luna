@@ -99,7 +99,6 @@ void luna_day_widget::add_event
 	      &QPushButton::clicked,
 	      this,
 	      &luna_day_widget::slot_modify);
-      event->setProperty("done", properties.value("done"));
       m_events_area->widget()->layout()->addWidget(event);
       m_events_area->widget()->layout()->setAlignment(Qt::AlignTop);
       m_events_area->widget()->layout()->setSpacing(1);
@@ -121,6 +120,7 @@ void luna_day_widget::add_event
   event->setProperty("color_text", color_text);
   event->setProperty("done", properties.value("done"));
   event->setProperty("end", end);
+  event->setProperty("notes", properties.value("notes"));
   event->setProperty("oid", oid);
   event->setProperty("start", start);
   event->setProperty("title", t);
@@ -195,6 +195,7 @@ void luna_day_widget::set_date(const QDate &date, const bool enabled)
 		      "color_text, "
 		      "done, "
 		      "identifier, "
+		      "notes, "
 		      "time_end, "
 		      "time_start, "
 		      "title "
@@ -220,6 +221,7 @@ void luna_day_widget::set_date(const QDate &date, const bool enabled)
 	      properties["color_text"] = QColor
 		(query.value("color_text").toString().trimmed());
 	      properties["done"] = query.value("done").toBool();
+	      properties["notes"] = query.value("notes").toString().trimmed();
 	      add_event(nullptr, properties, title, end, start, false, oid);
 	    }
       }
@@ -281,6 +283,7 @@ void luna_day_widget::slot_modify(void)
   event->set_property("color_background", button->property("color_background"));
   event->set_property("color_text", button->property("color_text"));
   event->set_property("done", button->property("done"));
+  event->set_property("notes", button->property("notes"));
   event->set_times
     (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
@@ -311,6 +314,7 @@ void luna_day_widget::slot_save(void)
   properties["color_background"] = event->color_background();
   properties["color_text"] = event->color_text();
   properties["done"] = event->is_done();
+  properties["notes"] = event->notes();
   add_event(button,
 	    properties,
 	    event->title(),
