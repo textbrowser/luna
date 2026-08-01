@@ -132,9 +132,9 @@ void luna_day_widget::add_event
   save ? luna_calendar::save(m_date, properties, t, end, start, oid) : (void) 0;
 }
 
-void luna_day_widget::mousePressEvent(QMouseEvent *event)
+void luna_day_widget::mouseDoubleClickEvent(QMouseEvent *event)
 {
-  QWidget::mousePressEvent(event);
+  QWidget::mouseDoubleClickEvent(event);
   slot_add();
 }
 
