@@ -111,7 +111,7 @@ qint64 luna_event::oid(void) const
 void luna_event::set_date(const QDate &date)
 {
   m_date = date;
-  m_ui.date->setText(date.toString("dddd, MMMM d"));
+  m_ui.date->setText(date.toString("dddd, MMMM d yyyy"));
 }
 
 void luna_event::set_oid(const qint64 oid)
