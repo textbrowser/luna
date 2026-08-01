@@ -40,7 +40,6 @@
 class QLabel;
 class QPushButton;
 class QScrollArea;
-class QToolButton;
 
 class luna_day_widget: public QWidget
 {
@@ -49,14 +48,13 @@ class luna_day_widget: public QWidget
  public:
   luna_day_widget(QWidget *parent);
   ~luna_day_widget();
-  void set_date(const QDate &date, const bool add_button);
+  void set_date(const QDate &date, const bool enabled);
   void set_day_text(const QString &text);
 
  private:
   QDate m_date;
   QLabel *m_day;
   QScrollArea *m_events_area;
-  QToolButton *m_add;
   Ui_luna_day_widget m_ui;
   void add_event(QPushButton *button,
 		 const QHash<QString, QVariant> &properties,
@@ -65,6 +63,7 @@ class luna_day_widget: public QWidget
 		 const QTime &time,
 		 const bool save,
 		 const qint64 oid);
+  void mousePressEvent(QMouseEvent *event);
   void prepare_fonts(void);
   void resizeEvent(QResizeEvent *event);
 

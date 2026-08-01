@@ -178,10 +178,12 @@ void luna_calendar::prepare_fonts(void)
 {
   auto font(m_ui.clock->font());
 
-  font.setBold(true);
   font.setPointSize(10 + font.pointSize());
   m_ui.clock->setFont(font);
   m_ui.month_year->setFont(font);
+  m_ui.next_month->setFont(font);
+  m_ui.previous_month->setFont(font);
+  m_ui.today->setFont(font);
 }
 
 void luna_calendar::prepare_month(const QDate &date)

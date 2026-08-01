@@ -35,7 +35,6 @@
 #include <QScrollArea>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QToolButton>
 
 #include "luna-calendar.h"
 #include "luna-day-widget.h"
@@ -43,13 +42,12 @@
 
 luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
-  m_add = nullptr;
   m_day = new QLabel(this);
-  m_day->move(10, 0);
+  m_day->move(10, 10);
   m_day->setAlignment(Qt::AlignCenter);
   m_day->setEnabled(false);
   m_events_area = new QScrollArea(this);
-  m_events_area->move(50, 0);
+  m_events_area->move(35, 0);
   m_events_area->setStyleSheet("QScrollArea {background: transparent;}");
   m_events_area->setWidget(new QWidget(this));
   m_events_area->setWidgetResizable(true);
@@ -134,6 +132,12 @@ void luna_day_widget::add_event
   save ? luna_calendar::save(m_date, properties, t, end, start, oid) : (void) 0;
 }
 
+void luna_day_widget::mousePressEvent(QMouseEvent *event)
+{
+  QWidget::mousePressEvent(event);
+  slot_add();
+}
+
 void luna_day_widget::prepare_fonts(void)
 {
   for(int i = 0; i < m_events_area->widget()->layout()->count(); i++)
@@ -160,26 +164,14 @@ void luna_day_widget::resizeEvent(QResizeEvent *event)
   m_events_area->resize(-50 + size().width(), -15 + size().height());
 }
 
-void luna_day_widget::set_date(const QDate &date, const bool add_button)
+void luna_day_widget::set_date(const QDate &date, const bool enabled)
 {
   m_date = date;
+  m_day->setEnabled(enabled);
 
-  if(add_button && m_add == nullptr && m_date.isValid())
-    {
-      m_add = new QToolButton(this);
-      m_add->move(5, m_day->height());
-      m_add->resize(50, 50);
-      m_add->setAutoRaise(true);
-      m_add->setDown(QDate::currentDate() == m_date);
-      m_add->setIcon(QIcon(":/64x64/new.png"));
-      m_add->setIconSize(QSize(32, 32));
-      m_add->setToolTip(tr("Add Event"));
-      m_day->setEnabled(true);
-      connect(m_add,
-	      &QToolButton::clicked,
-	      this,
-	      &luna_day_widget::slot_add);
-    }
+  if(QDate::currentDate() == date)
+    m_day->setStyleSheet
+      ("QLabel {background: #3969ef; border-radius: 10px; color: white;}");
 
   QString const connection_name("set_date");
 
@@ -240,8 +232,6 @@ void luna_day_widget::set_day_text(const QString &text)
 
 void luna_day_widget::slot_add(void)
 {
-  m_add ? m_add->setDown(QDate::currentDate() == m_date) : (void) 0;
-
   auto event = new luna_event(this);
 
   connect(event,

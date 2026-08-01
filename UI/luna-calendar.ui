@@ -37,6 +37,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="clock">
+        <property name="text">
+         <string>Clock</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -67,13 +74,6 @@
        <widget class="QToolButton" name="next_month">
         <property name="text">
          <string>&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="clock">
-        <property name="text">
-         <string>Clock</string>
         </property>
        </widget>
       </item>
