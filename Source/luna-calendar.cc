@@ -55,8 +55,14 @@ int main(int argc, char *argv[])
 #endif
 
   QApplication application(argc, argv);
+  auto font(application.font());
 
   application.setWindowIcon(QIcon(":/luna.png"));
+  font.setStyleStrategy
+    (QFont::StyleStrategy(QFont::NoSubpixelAntialias |
+			  QFont::PreferAntialias |
+			  QFont::PreferQuality));
+  application.setFont(font);
 
   QDir dir;
 
