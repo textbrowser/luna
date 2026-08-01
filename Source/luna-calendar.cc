@@ -98,6 +98,10 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &luna_calendar::slot_exit);
+  connect(m_ui.menu_View,
+	  &QMenu::aboutToShow,
+	  this,
+	  &luna_calendar::slot_about_to_show_view_menu);
   connect(m_ui.next_month,
 	  &QToolButton::clicked,
 	  this,
@@ -378,6 +382,18 @@ void luna_calendar::slot_about(void)
   about->activateWindow();
   about->button(QMessageBox::Close)->setShortcut(tr("Ctrl+W"));
   about->raise();
+}
+
+void luna_calendar::slot_about_to_show_view_menu(void)
+{
+  m_ui.menu_View->clear();
+
+  if(isFullScreen())
+    m_ui.menu_View->addAction
+      (tr("Normal"), this, &luna_calendar::showNormal);
+  else
+    m_ui.menu_View->addAction
+      (tr("Full Screen"), this, &luna_calendar::showFullScreen);
 }
 
 void luna_calendar::slot_clock_timer_timeout(void)

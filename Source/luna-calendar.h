@@ -77,6 +77,7 @@ class luna_calendar: public QMainWindow
 
  private slots:
   void slot_about(void);
+  void slot_about_to_show_view_menu(void);
   void slot_clock_timer_timeout(void);
   void slot_exit(void);
   void slot_select_month(void);
