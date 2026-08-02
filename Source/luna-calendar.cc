@@ -73,11 +73,7 @@ int main(int argc, char *argv[])
   {
     luna_calendar luna;
 
-#ifndef Q_OS_ANDROID
-    luna.showFullScreen();
-#else
     luna.showMaximized();
-#endif
     rc = static_cast<int> (application.exec());
   }
 
@@ -425,21 +421,18 @@ void luna_calendar::slot_about(void)
 void luna_calendar::slot_about_to_show_view_menu(void)
 {
   m_ui.menu_View->clear();
+#ifdef Q_OS_ANDROID
+  m_ui.menu_View->addAction
+    (tr("Maximized"), this, &luna_calendar::showMaximized);
+  return;
+#endif
 
   if(isFullScreen())
-    {
-      auto action = m_ui.menu_View->addAction
-	(tr("Normal"), this, &luna_calendar::showNormal);
-
-      action->setIcon(QIcon::fromTheme("view-restore"));
-    }
+    m_ui.menu_View->addAction
+      (tr("&Maximized"), this, &luna_calendar::showMaximized);
   else
-    {
-      auto action = m_ui.menu_View->addAction
-	(tr("Full Screen"), this, &luna_calendar::showFullScreen);
-
-      action->setIcon(QIcon::fromTheme("view-fullscreen"));
-    }
+    m_ui.menu_View->addAction
+      (tr("&Full Screen"), this, &luna_calendar::showFullScreen);
 }
 
 void luna_calendar::slot_clock_timer_timeout(void)
