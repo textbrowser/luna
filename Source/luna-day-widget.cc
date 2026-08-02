@@ -241,6 +241,7 @@ void luna_day_widget::set_day_text(const QString &text)
 
 void luna_day_widget::slot_add(void)
 {
+  auto const oid = luna_calendar::oid();
   auto event = new luna_event(this);
 
   connect(event,
@@ -252,11 +253,12 @@ void luna_day_widget::slot_add(void)
 	  this,
 	  SLOT(slot_remove(const qint64)));
   event->setAttribute(Qt::WA_DeleteOnClose);
-  event->resize(event->sizeHint());
+  event->setObjectName(QString::number(oid));
   event->setModal(false);
   event->set_date(m_date);
-  event->set_oid(luna_calendar::oid());
+  event->set_oid(oid);
   event->show();
+  event->resize(event->sizeHint());
 }
 
 void luna_day_widget::slot_modify(void)
@@ -266,19 +268,25 @@ void luna_day_widget::slot_modify(void)
   if(!button)
     return;
 
-  auto event = new luna_event(this);
+  auto event = findChild<luna_event *>
+    (QString::number(button->property("oid").toLongLong()));
 
-  connect(event,
-	  &luna_event::save,
-	  this,
-	  &luna_day_widget::slot_save);
-  connect(event,
-	  SIGNAL(remove(const qint64)),
-	  this,
-	  SLOT(slot_remove(const qint64)));
+  if(!event)
+    {
+      event = new luna_event(this);
+      connect(event,
+	      &luna_event::save,
+	      this,
+	      &luna_day_widget::slot_save);
+      connect(event,
+	      SIGNAL(remove(const qint64)),
+	      this,
+	      SLOT(slot_remove(const qint64)));
+    }
+
   event->setAttribute(Qt::WA_DeleteOnClose);
-  event->resize(event->sizeHint());
   event->setModal(false);
+  event->setObjectName(QString::number(button->property("oid").toLongLong()));
   event->set_date(m_date);
   event->set_oid(button->property("oid").toLongLong());
   event->set_property("color_background", button->property("color_background"));
@@ -288,7 +296,10 @@ void luna_day_widget::slot_modify(void)
   event->set_times
     (button->property("end").toTime(), button->property("start").toTime());
   event->set_title(button->property("title").toString());
-  event->show();
+  event->showNormal();
+  event->activateWindow();
+  event->raise();
+  event->resize(event->sizeHint());
 }
 
 void luna_day_widget::slot_remove(const qint64 oid)
