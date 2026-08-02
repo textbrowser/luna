@@ -40,7 +40,7 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
   m_oid = 0;
   m_ui.setupUi(this);
   connect(m_ui.close,
-	  &QPushButton::clicked,
+	  &QToolButton::clicked,
 	  this,
 	  &luna_event::close);
   connect(m_ui.color_background,
@@ -52,7 +52,7 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  this,
 	  &luna_event::slot_select_color);
   connect(m_ui.remove,
-	  &QPushButton::clicked,
+	  &QToolButton::clicked,
 	  this,
 	  &luna_event::slot_remove);
   connect(m_ui.save,
@@ -67,10 +67,15 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  SIGNAL(toggled(bool)),
 	  m_ui.time_box,
 	  SLOT(setVisible(bool)));
+  connect(m_ui.title,
+	  &QLineEdit::returnPressed,
+	  this,
+	  &luna_event::slot_save);
   luna_calendar::assign_image(m_ui.color_background, QColor(89, 90, 150, 200));
   luna_calendar::assign_image(m_ui.color_text, QColor(Qt::white));
   m_ui.close->setShortcut(tr("Ctrl+W"));
   m_ui.notes->setVisible(false);
+  m_ui.save->setAutoDefault(true);
   m_ui.save->setIcon(QIcon::fromTheme("document-save"));
   m_ui.time->setIcon(QIcon::fromTheme("appointment-new"));
   m_ui.time_box->setVisible(false);
