@@ -57,6 +57,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_ui.setupUi(this);
   m_ui.label->setAttribute(Qt::WA_TransparentForMouseEvents);
   prepare_fonts();
+  setToolTip(tr("Double-click an empty region to add an event."));
 }
 
 luna_day_widget::~luna_day_widget()
