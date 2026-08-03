@@ -241,6 +241,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QToolButton" name="done">
+       <property name="toolTip">
+        <string>Denote as completed.</string>
+       </property>
        <property name="text">
         <string>Done</string>
        </property>
