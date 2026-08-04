@@ -34,11 +34,13 @@
 #define luna_calendar_h
 
 #include <QDir>
+#include <QPointer>
 #include <QTimer>
 
 #include "ui_luna-calendar.h"
 
 class QPushButton;
+class luna_day_widget;
 
 class luna_calendar: public QMainWindow
 {
@@ -69,7 +71,9 @@ class luna_calendar: public QMainWindow
 
  private:
   QDate m_date;
+  QPointer<luna_day_widget> m_current_day;
   QTimer m_clock_timer;
+  QTimer m_day_timer;
   Ui_luna_calendar m_ui;
   static QString s_version;
   void prepare_database(void);
@@ -80,6 +84,7 @@ class luna_calendar: public QMainWindow
   void slot_about(void);
   void slot_about_to_show_view_menu(void);
   void slot_clock_timer_timeout(void);
+  void slot_day_timer_timeout(void);
   void slot_exit(void);
   void slot_select_month(void);
 };

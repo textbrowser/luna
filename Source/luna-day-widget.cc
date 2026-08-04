@@ -170,6 +170,15 @@ void luna_day_widget::resizeEvent(QResizeEvent *event)
   m_events_area->resize(-50 + size().width(), -15 + size().height());
 }
 
+void luna_day_widget::set_current_day(const bool state)
+{
+  if(state)
+    m_day->setStyleSheet
+      ("QLabel {background: #3969ef; border-radius: 10px; color: white;}");
+  else
+    m_day->setStyleSheet("");
+}
+
 void luna_day_widget::set_date(const QDate &date, const bool enabled)
 {
   m_date = date;

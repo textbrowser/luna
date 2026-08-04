@@ -48,6 +48,13 @@ class luna_day_widget: public QWidget
  public:
   luna_day_widget(QWidget *parent);
   ~luna_day_widget();
+
+  bool is_current_date(void) const
+  {
+    return QDate::currentDate() == m_date;
+  }
+
+  void set_current_day(const bool state);
   void set_date(const QDate &date, const bool enabled);
   void set_day_text(const QString &text);
 

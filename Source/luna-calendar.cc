@@ -92,6 +92,10 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  &QTimer::timeout,
 	  this,
 	  &luna_calendar::slot_clock_timer_timeout);
+  connect(&m_day_timer,
+	  &QTimer::timeout,
+	  this,
+	  &luna_calendar::slot_day_timer_timeout);
   connect(m_ui.action_About,
 	  &QAction::triggered,
 	  this,
@@ -117,6 +121,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  this,
 	  &luna_calendar::slot_select_month);
   m_clock_timer.start(1000);
+  m_day_timer.start(60000);
   m_ui.action_About->setIcon(QIcon::fromTheme("help-about"));
   m_ui.action_Exit->setIcon(QIcon::fromTheme("application-exit"));
   m_ui.clock->clear();
@@ -269,6 +274,8 @@ void luna_calendar::prepare_month(const QDate &date)
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
+	  m_current_day = widget->is_current_date() ?
+	    widget : m_current_day.data();
 	  widget->set_date(QDate(date.year(), date.month(), day), true);
 	  widget->set_day_text(QString::number(day));
 	}
@@ -292,6 +299,8 @@ void luna_calendar::prepare_month(const QDate &date)
       if(i % 7 == 0)
 	row += 1;
     }
+
+  slot_day_timer_timeout();
 }
 
 void luna_calendar::remove(const qint64 oid)
@@ -438,6 +447,27 @@ void luna_calendar::slot_about_to_show_view_menu(void)
 void luna_calendar::slot_clock_timer_timeout(void)
 {
   m_ui.clock->setText(QDateTime::currentDateTime().toString("h:mm:ss AP"));
+}
+
+void luna_calendar::slot_day_timer_timeout(void)
+{
+  if(m_current_day && m_current_day->is_current_date())
+    {
+      m_current_day->set_current_day(true);
+      return;
+    }
+
+  foreach(auto widget, findChildren<luna_day_widget *> ())
+    if(widget)
+      {
+	if(widget->is_current_date())
+	  {
+	    m_current_day = widget;
+	    widget->set_current_day(true);
+	  }
+	else
+	  widget->set_current_day(false);
+      }
 }
 
 void luna_calendar::slot_exit(void)
