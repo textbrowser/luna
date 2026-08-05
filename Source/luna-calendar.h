@@ -74,6 +74,7 @@ class luna_calendar: public QMainWindow
   QTimer m_day_timer;
   Ui_luna_calendar m_ui;
   static QString s_version;
+  void mouseMoveEvent(QMouseEvent *event);
   void prepare_database(void);
   void prepare_fonts(void);
   void prepare_month

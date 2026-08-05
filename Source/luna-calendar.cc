@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
 luna_calendar::luna_calendar(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
   connect(&m_clock_timer,
 	  &QTimer::timeout,
 	  this,
@@ -135,6 +136,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
   prepare_database();
   prepare_fonts();
   prepare_month(m_date = QDate::currentDate(), true);
+  setMouseTracking(true);
 }
 
 luna_calendar::~luna_calendar()
@@ -187,6 +189,12 @@ void luna_calendar::assign_image(QPushButton *button, const QColor &color)
   image.fill(color);
   button->setIcon(QPixmap::fromImage(image));
   button->setProperty("color", color);
+}
+
+void luna_calendar::mouseMoveEvent(QMouseEvent *event)
+{
+  QMainWindow::mouseMoveEvent(event);
+  m_day_timer.start();
 }
 
 void luna_calendar::prepare_database(void)
