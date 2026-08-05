@@ -122,7 +122,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  this,
 	  &luna_calendar::slot_select_month);
   m_clock_timer.start(1000);
-  m_day_timer.start(86400000 - QTime::currentTime().msecsSinceStartOfDay());
+  m_day_timer.start(86401500 - QTime::currentTime().msecsSinceStartOfDay());
   m_ui.action_About->setIcon(QIcon::fromTheme("help-about"));
   m_ui.action_Exit->setIcon(QIcon::fromTheme("application-exit"));
   m_ui.clock->clear();
