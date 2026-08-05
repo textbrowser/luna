@@ -34,7 +34,6 @@
 #define luna_calendar_h
 
 #include <QDir>
-#include <QPointer>
 #include <QTimer>
 
 #include "ui_luna-calendar.h"
@@ -71,7 +70,6 @@ class luna_calendar: public QMainWindow
 
  private:
   QDate m_date;
-  QPointer<luna_day_widget> m_current_day;
   QTimer m_clock_timer;
   QTimer m_day_timer;
   Ui_luna_calendar m_ui;

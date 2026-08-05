@@ -274,8 +274,6 @@ void luna_calendar::prepare_month(const QDate &date)
       if(date.daysInMonth() > day && first <= i)
 	{
 	  day += 1;
-	  m_current_day = widget->is_current_date() ?
-	    widget : m_current_day.data();
 	  widget->set_date(QDate(date.year(), date.month(), day), true);
 	  widget->set_day_text(QString::number(day));
 	}
@@ -451,20 +449,11 @@ void luna_calendar::slot_clock_timer_timeout(void)
 
 void luna_calendar::slot_day_timer_timeout(void)
 {
-  if(m_current_day && m_current_day->is_current_date())
-    {
-      m_current_day->set_current_day(true);
-      return;
-    }
-
   foreach(auto widget, findChildren<luna_day_widget *> ())
     if(widget)
       {
 	if(widget->is_current_date())
-	  {
-	    m_current_day = widget;
-	    widget->set_current_day(true);
-	  }
+	  widget->set_current_day(true);
 	else
 	  widget->set_current_day(false);
       }

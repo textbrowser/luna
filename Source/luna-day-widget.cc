@@ -64,6 +64,12 @@ luna_day_widget::~luna_day_widget()
 {
 }
 
+
+bool luna_day_widget::is_current_date(void) const
+{
+  return QDate::currentDate() == m_date;
+}
+
 void luna_day_widget::add_event
 (QPushButton *event,
  const QHash<QString, QVariant> &properties,
