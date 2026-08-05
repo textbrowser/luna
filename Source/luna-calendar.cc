@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
 luna_calendar::luna_calendar(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
   connect(&m_clock_timer,
 	  &QTimer::timeout,
 	  this,
@@ -123,7 +122,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  this,
 	  &luna_calendar::slot_select_month);
   m_clock_timer.start(1000);
-  m_day_timer.start(60000);
+  m_day_timer.start(86400000 - QTime::currentTime().msecsSinceStartOfDay());
   m_ui.action_About->setIcon(QIcon::fromTheme("help-about"));
   m_ui.action_Exit->setIcon(QIcon::fromTheme("application-exit"));
   m_ui.clock->clear();
@@ -136,7 +135,6 @@ luna_calendar::luna_calendar(void):QMainWindow()
   prepare_database();
   prepare_fonts();
   prepare_month(m_date = QDate::currentDate(), true);
-  setMouseTracking(true);
 }
 
 luna_calendar::~luna_calendar()
@@ -189,12 +187,6 @@ void luna_calendar::assign_image(QPushButton *button, const QColor &color)
   image.fill(color);
   button->setIcon(QPixmap::fromImage(image));
   button->setProperty("color", color);
-}
-
-void luna_calendar::mouseMoveEvent(QMouseEvent *event)
-{
-  QMainWindow::mouseMoveEvent(event);
-  m_day_timer.start();
 }
 
 void luna_calendar::prepare_database(void)
@@ -471,6 +463,8 @@ void luna_calendar::slot_day_timer_timeout(void)
 	  else
 	    widget->set_current_day(false);
 	}
+
+  m_day_timer.start(86400000 - QTime::currentTime().msecsSinceStartOfDay());
 }
 
 void luna_calendar::slot_exit(void)
