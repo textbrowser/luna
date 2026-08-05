@@ -76,7 +76,8 @@ class luna_calendar: public QMainWindow
   static QString s_version;
   void prepare_database(void);
   void prepare_fonts(void);
-  void prepare_month(const QDate &date);
+  void prepare_month
+    (const QDate &date, const bool issue_slot_day_timer_timeout);
 
  private slots:
   void slot_about(void);

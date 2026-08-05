@@ -134,7 +134,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
   m_ui.today->setAutoRaise(true);
   prepare_database();
   prepare_fonts();
-  prepare_month(m_date = QDate::currentDate());
+  prepare_month(m_date = QDate::currentDate(), true);
 }
 
 luna_calendar::~luna_calendar()
@@ -224,7 +224,8 @@ void luna_calendar::prepare_fonts(void)
   m_ui.today->setFont(font);
 }
 
-void luna_calendar::prepare_month(const QDate &date)
+void luna_calendar::prepare_month
+(const QDate &date, const bool issue_slot_day_timer_timeout)
 {
   for(int i = m_ui.grid->count() - 1; i >= 0; i--)
     {
@@ -299,7 +300,7 @@ void luna_calendar::prepare_month(const QDate &date)
 	row += 1;
     }
 
-  slot_day_timer_timeout();
+  issue_slot_day_timer_timeout ? slot_day_timer_timeout() : (void) 0;
 }
 
 void luna_calendar::remove(const qint64 oid)
@@ -452,7 +453,7 @@ void luna_calendar::slot_day_timer_timeout(void)
 {
   if(QDate::currentDate() != m_date &&
      findChildren<luna_event *> ().isEmpty())
-    prepare_month(m_date = QDate::currentDate());
+    prepare_month(m_date = QDate::currentDate(), false);
   else
     foreach(auto widget, findChildren<luna_day_widget *> ())
       if(widget)
@@ -472,9 +473,9 @@ void luna_calendar::slot_exit(void)
 void luna_calendar::slot_select_month(void)
 {
   if(m_ui.next_month == sender())
-    prepare_month(m_date = m_date.addMonths(1));
+    prepare_month(m_date = m_date.addMonths(1), false);
   else if(m_ui.previous_month == sender())
-    prepare_month(m_date = m_date.addMonths(-1));
+    prepare_month(m_date = m_date.addMonths(-1), false);
   else if(QDate::currentDate() != m_date)
-    prepare_month(m_date = QDate::currentDate());
+    prepare_month(m_date = QDate::currentDate(), false);
 }
