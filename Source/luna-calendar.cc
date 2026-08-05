@@ -40,6 +40,7 @@
 
 #include "luna-calendar.h"
 #include "luna-day-widget.h"
+#include "luna-event.h"
 
 QString luna_calendar::s_version = "2026.08.05";
 
@@ -449,14 +450,18 @@ void luna_calendar::slot_clock_timer_timeout(void)
 
 void luna_calendar::slot_day_timer_timeout(void)
 {
-  foreach(auto widget, findChildren<luna_day_widget *> ())
-    if(widget)
-      {
-	if(widget->is_current_date())
-	  widget->set_current_day(true);
-	else
-	  widget->set_current_day(false);
-      }
+  if(QDate::currentDate() != m_date &&
+     findChildren<luna_event *> ().isEmpty())
+    prepare_month(m_date = QDate::currentDate());
+  else
+    foreach(auto widget, findChildren<luna_day_widget *> ())
+      if(widget)
+	{
+	  if(widget->is_current_date())
+	    widget->set_current_day(true);
+	  else
+	    widget->set_current_day(false);
+	}
 }
 
 void luna_calendar::slot_exit(void)

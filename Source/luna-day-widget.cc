@@ -189,10 +189,7 @@ void luna_day_widget::set_date(const QDate &date, const bool enabled)
 {
   m_date = date;
   m_day->setEnabled(enabled);
-
-  if(QDate::currentDate() == date)
-    m_day->setStyleSheet
-      ("QLabel {background: #3969ef; border-radius: 10px; color: white;}");
+  set_current_day(QDate::currentDate() == date);
 
   QString const connection_name("set_date");
 
