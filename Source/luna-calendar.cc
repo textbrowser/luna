@@ -109,6 +109,10 @@ luna_calendar::luna_calendar(void):QMainWindow()
 	  &QMenu::aboutToShow,
 	  this,
 	  &luna_calendar::slot_about_to_show_view_menu);
+  connect(m_ui.month_year,
+	  SIGNAL(dateChanged(const QDate &)),
+	  this,
+	  SLOT(slot_select_month(void)));
   connect(m_ui.next_month,
 	  &QToolButton::clicked,
 	  this,
@@ -135,6 +139,7 @@ luna_calendar::luna_calendar(void):QMainWindow()
   prepare_database();
   prepare_fonts();
   prepare_month(m_date = QDate::currentDate(), true);
+  setFocus();
 }
 
 luna_calendar::~luna_calendar()
@@ -262,7 +267,7 @@ void luna_calendar::prepare_month
   auto const previous(date.addMonths(-1));
   auto const today(QDate::currentDate());
 
-  m_ui.month_year->setText(date.toString("MMMM, yyyy"));
+  m_ui.month_year->setDate(date);
 
   for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
       i <= 42;
@@ -474,7 +479,9 @@ void luna_calendar::slot_exit(void)
 
 void luna_calendar::slot_select_month(void)
 {
-  if(m_ui.next_month == sender())
+  if(m_ui.month_year == sender())
+    prepare_month(m_date = m_ui.month_year->date(), false);
+  else if(m_ui.next_month == sender())
     prepare_month(m_date = m_date.addMonths(1), false);
   else if(m_ui.previous_month == sender())
     prepare_month(m_date = m_date.addMonths(-1), false);

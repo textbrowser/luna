@@ -30,9 +30,18 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="month_year">
-        <property name="text">
-         <string>Month, Year</string>
+       <widget class="QDateEdit" name="month_year">
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+        <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+        </property>
+        <property name="displayFormat">
+         <string>MMMM, yyyy</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -130,6 +139,7 @@
   </action>
  </widget>
  <tabstops>
+  <tabstop>month_year</tabstop>
   <tabstop>previous_month</tabstop>
   <tabstop>today</tabstop>
   <tabstop>next_month</tabstop>
