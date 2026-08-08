@@ -469,7 +469,7 @@ void luna_calendar::slot_day_timer_timeout(void)
 	    widget->set_current_day(false);
 	}
 
-  m_day_timer.start(86400000 - QTime::currentTime().msecsSinceStartOfDay());
+  m_day_timer.start(86401500 - QTime::currentTime().msecsSinceStartOfDay());
 }
 
 void luna_calendar::slot_exit(void)
