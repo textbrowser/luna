@@ -267,7 +267,9 @@ void luna_calendar::prepare_month
   auto const previous(date.addMonths(-1));
   auto const today(QDate::currentDate());
 
+  m_ui.month_year->blockSignals(true);
   m_ui.month_year->setDate(date);
+  m_ui.month_year->blockSignals(false);
 
   for(int day = 0, i = 1, j = 1 - first + previous.daysInMonth(), row = 1;
       i <= 42;
