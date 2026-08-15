@@ -74,7 +74,12 @@ int main(int argc, char *argv[])
   {
     luna_calendar luna;
 
+#ifdef Q_OS_ANDROID
     luna.showMaximized();
+#else
+    luna.resize(800, 600);
+    luna.show();
+#endif
     rc = static_cast<int> (application.exec());
   }
 
@@ -439,13 +444,13 @@ void luna_calendar::slot_about_to_show_view_menu(void)
   m_ui.menu_View->clear();
 #ifdef Q_OS_ANDROID
   m_ui.menu_View->addAction
-    (tr("Maximized"), this, &luna_calendar::showMaximized);
+    (tr("&Maximized Screen"), this, &luna_calendar::showMaximized);
   return;
 #endif
 
   if(isFullScreen())
     m_ui.menu_View->addAction
-      (tr("&Maximized"), this, &luna_calendar::showMaximized);
+      (tr("&Normal Screen"), this, &luna_calendar::showMaximized);
   else
     m_ui.menu_View->addAction
       (tr("&Full Screen"), this, &luna_calendar::showFullScreen);
