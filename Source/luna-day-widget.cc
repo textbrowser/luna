@@ -42,6 +42,10 @@
 
 luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
 {
+  connect(this,
+	  SIGNAL(customContextMenuRequested(const QPoint &)),
+	  this,
+	  SLOT(slot_custom_context_menu_requested(const QPoint &)));
   m_day = new QLabel(this);
   m_day->move(10, 10);
   m_day->setAlignment(Qt::AlignCenter);
@@ -57,6 +61,7 @@ luna_day_widget::luna_day_widget(QWidget *parent):QWidget(parent)
   m_ui.setupUi(this);
   m_ui.label->setAttribute(Qt::WA_TransparentForMouseEvents);
   prepare_fonts();
+  setContextMenuPolicy(Qt::CustomContextMenu);
   setToolTip(tr("Double-click an empty region to add an event."));
 }
 
@@ -272,6 +277,14 @@ void luna_day_widget::slot_add(void)
   event->set_oid(oid);
   event->show();
   event->resize(event->sizeHint());
+}
+
+void luna_day_widget::slot_custom_context_menu_requested(const QPoint &pos)
+{
+  QMenu menu(this);
+
+  menu.addAction(tr("&New Event..."), this, &luna_day_widget::slot_add);
+  menu.exec(mapToGlobal(pos));
 }
 
 void luna_day_widget::slot_modify(void)

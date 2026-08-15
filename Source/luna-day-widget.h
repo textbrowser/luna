@@ -71,6 +71,7 @@ class luna_day_widget: public QWidget
 
  private slots:
   void slot_add(void);
+  void slot_custom_context_menu_requested(const QPoint &pos);
   void slot_modify(void);
   void slot_remove(const qint64 oid);
   void slot_save(void);
