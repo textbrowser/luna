@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+# https://specifications.freedesktop.org/desktop-entry-spec/latest/apa.html
+
+[Desktop Entry]
+Categories=Library
+Comment=Luna
+Exec=/opt/luna/luna.sh
+GenericName=Luna
+Icon=/opt/luna/luna.png
+Name=Luna
+StartupNotify=true
+Terminal=false
+Type=Application
