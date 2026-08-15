@@ -282,6 +282,16 @@ void luna_day_widget::slot_add(void)
 void luna_day_widget::slot_custom_context_menu_requested(const QPoint &pos)
 {
   QMenu menu(this);
+  auto event = qobject_cast<QPushButton *>
+    (QApplication::widgetAt(mapToGlobal(pos)));
+
+  if(event)
+    {
+      auto action = menu.addAction
+	(tr("&Delete Event"), this, SLOT(slot_remove(void)));
+
+      action->setProperty("oid", event->property("oid"));
+    }
 
   menu.addAction(tr("&New Event..."), this, &luna_day_widget::slot_add);
   menu.exec(mapToGlobal(pos));
@@ -333,6 +343,22 @@ void luna_day_widget::slot_remove(const qint64 oid)
   auto button = m_events_area->findChild<QPushButton *> (QString::number(oid));
 
   if(button)
+    button->deleteLater();
+
+  luna_calendar::remove(oid);
+}
+
+void luna_day_widget::slot_remove(void)
+{
+  auto action = qobject_cast<QAction *> (sender());
+
+  if(!action)
+    return;
+
+  QPushButton *button = nullptr;
+  auto const oid = action->property("oid").toLongLong();
+
+  if((button = m_events_area->findChild<QPushButton *> (QString::number(oid))))
     button->deleteLater();
 
   luna_calendar::remove(oid);
