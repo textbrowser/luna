@@ -42,7 +42,7 @@
 #include "luna-day-widget.h"
 #include "luna-event.h"
 
-QString luna_calendar::s_version = "2026.08.05";
+QString luna_calendar::s_version = "2026.08.15";
 
 int main(int argc, char *argv[])
 {
