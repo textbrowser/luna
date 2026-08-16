@@ -6,7 +6,7 @@ Depends: libqt6core6t64,
 Maintainer: f83043e79dc03a0abfbcbc376879a97d66f2cacb@protonmail.ch
 Package: Luna
 Priority: optional
-Section: tasks
+Section: Tasks
 Version: 2026.08.15
 Description: Luna
  Welcome to Luna!
