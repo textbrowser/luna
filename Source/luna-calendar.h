@@ -34,6 +34,7 @@
 #define luna_calendar_h
 
 #include <QDir>
+#include <QElapsedTimer>
 #include <QTimer>
 
 #include "ui_luna-calendar.h"
@@ -70,10 +71,12 @@ class luna_calendar: public QMainWindow
 
  private:
   QDate m_date;
+  QElapsedTimer m_paint_event_elapsed_timer;
   QTimer m_clock_timer;
   QTimer m_day_timer;
   Ui_luna_calendar m_ui;
   static QString s_version;
+  bool event(QEvent *event);
   void prepare_database(void);
   void prepare_fonts(void);
   void prepare_month

@@ -93,6 +93,7 @@ int main(int argc, char *argv[])
 
 luna_calendar::luna_calendar(void):QMainWindow()
 {
+  m_paint_event_elapsed_timer.start();
   m_ui.setupUi(this);
   connect(&m_clock_timer,
 	  &QTimer::timeout,
@@ -149,6 +150,28 @@ luna_calendar::luna_calendar(void):QMainWindow()
 
 luna_calendar::~luna_calendar()
 {
+}
+
+bool luna_calendar::event(QEvent *event)
+{
+  if(event &&
+     event->type() == QEvent::Paint &&
+     m_paint_event_elapsed_timer.elapsed() >= 2500)
+    {
+      foreach(auto widget, findChildren<luna_day_widget *> ())
+	if(widget)
+	  {
+	    if(widget->is_current_date())
+	      widget->set_current_day(true);
+	    else
+	      widget->set_current_day(false);
+	  }
+
+      m_paint_event_elapsed_timer.start();
+      return true;
+    }
+
+  return QMainWindow::event(event);
 }
 
 qint64 luna_calendar::oid(void)
