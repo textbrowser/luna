@@ -63,10 +63,20 @@ luna_event::luna_event(QWidget *parent):QDialog(parent)
 	  SIGNAL(toggled(bool)),
 	  m_ui.notes,
 	  SLOT(setVisible(bool)));
+  connect(m_ui.set_notes,
+	  SIGNAL(toggled(bool)),
+	  this,
+	  SLOT(slot_resize(void)),
+	  Qt::QueuedConnection);
   connect(m_ui.time,
 	  SIGNAL(toggled(bool)),
 	  m_ui.time_box,
 	  SLOT(setVisible(bool)));
+  connect(m_ui.time,
+	  SIGNAL(toggled(bool)),
+	  this,
+	  SLOT(slot_resize(void)),
+	  Qt::QueuedConnection);
   connect(m_ui.title,
 	  &QLineEdit::returnPressed,
 	  this,
@@ -169,6 +179,11 @@ void luna_event::slot_remove(void)
 {
   emit remove(m_oid);
   reject();
+}
+
+void luna_event::slot_resize(void)
+{
+  resize(sizeHint());
 }
 
 void luna_event::slot_save(void)

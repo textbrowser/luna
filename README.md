@@ -6,9 +6,14 @@ Qt LTS is required.
 
 Dates are recorded in ISO 8601 format.
 
-<b>Version 2026.08.15 is the newest LTS release.</b>
+<b>Version 2026.10.17 is the newest LTS release.</b>
 
 <b>Release Notes</b>
+
+<p><b>2026.10.17 Release</b></p>
+<ul>
+<li>Resize an Event dialog if child widgets are hidden.</li>
+</ul>
 
 <p><b>2026.08.15 Release</b></p>
 <ul>

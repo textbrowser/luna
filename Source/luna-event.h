@@ -63,6 +63,7 @@ class luna_event: public QDialog
 
  private slots:
   void slot_remove(void);
+  void slot_resize(void);
   void slot_save(void);
   void slot_select_color(void);
 
