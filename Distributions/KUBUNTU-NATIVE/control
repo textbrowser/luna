@@ -7,7 +7,7 @@ Maintainer: f83043e79dc03a0abfbcbc376879a97d66f2cacb@protonmail.ch
 Package: Luna
 Priority: optional
 Section: Tasks
-Version: 2026.08.15
+Version: 2026.10.17
 Description: Luna
  Welcome to Luna!
  A luna.desktop file will also be installed in /usr/share/applications/.

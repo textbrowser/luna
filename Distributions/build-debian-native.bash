@@ -52,12 +52,12 @@ cp -r ./opt/luna luna-debian.d/opt/.
 
 if [ $architecture = "arm64" ]
 then
-    fakeroot dpkg-deb --build luna-debian.d Luna-2026.08.15_PiOS_arm64.deb
+    fakeroot dpkg-deb --build luna-debian.d Luna-2026.10.17_PiOS_arm64.deb
 elif [ $architecture = "armhf" ]
 then
-    fakeroot dpkg-deb --build luna-debian.d Luna-2026.08.15_PiOS_arm32.deb
+    fakeroot dpkg-deb --build luna-debian.d Luna-2026.10.17_PiOS_arm32.deb
 else
-    fakeroot dpkg-deb --build luna-debian.d Luna-2026.08.15_Kubuntu_amd64.deb
+    fakeroot dpkg-deb --build luna-debian.d Luna-2026.10.17_Kubuntu_amd64.deb
 fi
 
 make distclean
