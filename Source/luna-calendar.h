@@ -33,6 +33,8 @@
 #ifndef luna_calendar_h
 #define luna_calendar_h
 
+#define LUNA_VERSION_STRING "2026.10.17"
+
 #include <QDir>
 #include <QElapsedTimer>
 #include <QTimer>
@@ -75,7 +77,6 @@ class luna_calendar: public QMainWindow
   QTimer m_clock_timer;
   QTimer m_day_timer;
   Ui_luna_calendar m_ui;
-  static QString s_version;
   bool event(QEvent *event);
   void prepare_database(void);
   void prepare_fonts(void);

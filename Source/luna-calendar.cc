@@ -42,8 +42,6 @@
 #include "luna-day-widget.h"
 #include "luna-event.h"
 
-QString luna_calendar::s_version = "2026.10.17";
-
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_ANDROID)
@@ -450,7 +448,7 @@ void luna_calendar::slot_about(void)
 	"Architecture %2.<br>"
 	"Made with love by textbrower.<br>"
 	"Software for and from the margins.").
-     arg(s_version).
+     arg(LUNA_VERSION_STRING).
      arg(QSysInfo::currentCpuArchitecture()));
   about->setTextFormat(Qt::RichText);
   about->setWindowIcon(windowIcon());
