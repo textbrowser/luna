@@ -32,7 +32,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="styleSheet">
-      <string notr="true">QLabel {background: transparent; border: 1px solid lightgray;}</string>
+      <string notr="true">QLabel {background: transparent; border: 1px solid #2a3439;}</string>
      </property>
     </widget>
    </item>

@@ -282,7 +282,6 @@ void luna_calendar::prepare_month
       auto label = new QLabel(days[i], this);
 
       font = label->font();
-      font.setBold(true);
       font.setPointSize(5 + font.pointSize());
       label->setFont(font);
       m_ui.grid->addWidget(label, 0, i, Qt::AlignHCenter | Qt::AlignTop);
