@@ -6,7 +6,7 @@ Qt LTS is required.
 
 Dates are recorded in ISO 8601 format.
 
-<b>Version 2026.10.17 is the newest LTS release.</b>
+<b>Version 2026.11.16 is the newest LTS release.</b>
 
 <b>Release Notes</b>
 
