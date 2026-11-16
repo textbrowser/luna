@@ -10,6 +10,13 @@ Dates are recorded in ISO 8601 format.
 
 <b>Release Notes</b>
 
+<p><b>2026.11.16 Release</b></p>
+<ul>
+<li>New grid color.</li>
+<li>Removed bold font from day labels.</li>
+<li>Show as maximized.</li>
+</ul>
+
 <p><b>2026.10.17 Release</b></p>
 <ul>
 <li>Resize an Event dialog if child widgets are hidden.</li>

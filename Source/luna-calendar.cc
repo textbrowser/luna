@@ -75,8 +75,7 @@ int main(int argc, char *argv[])
 #ifdef Q_OS_ANDROID
     luna.showMaximized();
 #else
-    luna.resize(800, 600);
-    luna.show();
+    luna.showMaximized();
 #endif
     rc = static_cast<int> (application.exec());
   }
