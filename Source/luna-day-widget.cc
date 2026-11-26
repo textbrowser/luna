@@ -366,10 +366,18 @@ void luna_day_widget::slot_modify(void)
 
 void luna_day_widget::slot_remove(const qint64 oid)
 {
+  /*
+  ** The event editor is destroyed because Qt::WA_DeleteOnClose.
+  */
+
   auto button = m_events_area->findChild<QPushButton *> (QString::number(oid));
+  luna_event *event = nullptr;
 
   if(button)
     button->deleteLater();
+
+  if((event = findChild<luna_event *> (QString::number(oid))))
+    event->deleteLater();
 
   luna_calendar::remove(oid);
 }
@@ -380,6 +388,10 @@ void luna_day_widget::slot_remove(void)
 
   if(!action)
     return;
+
+  /*
+  ** The event editor is destroyed because Qt::WA_DeleteOnClose.
+  */
 
   QPushButton *button = nullptr;
   auto const oid = action->property("oid").toLongLong();
