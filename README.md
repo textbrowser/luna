@@ -6,11 +6,11 @@ Qt LTS is required.
 
 Dates are recorded in ISO 8601 format.
 
-<b>Version 2026.11.30 is the newest LTS release.</b>
+<b>Version 2026.11.26 is the newest LTS release.</b>
 
 <b>Release Notes</b>
 
-<p><b>2026.11.30 Release</b></p>
+<p><b>2026.11.26 Release</b></p>
 <ul>
 <li>Close an event editor if the event is removed via a context menu.</li>
 <li>Inspect items and widgets in luna_day_widget::prepare_fonts().</li>

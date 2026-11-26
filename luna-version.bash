@@ -41,4 +41,4 @@ FILE="Source/luna-calendar.h"
 sed -i \
     's/\(LUNA_VERSION_STRING "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
     $FILE
-echo "Please modify ReleaseNotes.html."
+echo "Please modify README.md."
