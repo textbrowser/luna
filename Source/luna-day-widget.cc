@@ -357,9 +357,13 @@ void luna_day_widget::slot_remove(void)
 
   QPushButton *button = nullptr;
   auto const oid = action->property("oid").toLongLong();
+  luna_event *event = nullptr;
 
   if((button = m_events_area->findChild<QPushButton *> (QString::number(oid))))
     button->deleteLater();
+
+  if((event = findChild<luna_event *> (QString::number(oid))))
+    event->deleteLater();
 
   luna_calendar::remove(oid);
 }
