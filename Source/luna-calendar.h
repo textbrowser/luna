@@ -33,7 +33,7 @@
 #ifndef luna_calendar_h
 #define luna_calendar_h
 
-#define LUNA_VERSION_STRING "2026.11.16"
+#define LUNA_VERSION_STRING "2026.11.30"
 
 #include <QDir>
 #include <QElapsedTimer>

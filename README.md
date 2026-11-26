@@ -10,6 +10,13 @@ Dates are recorded in ISO 8601 format.
 
 <b>Release Notes</b>
 
+<p><b>2026.11.30 Release</b></p>
+<ul>
+<li>Close an event editor if the event is removed via a context menu.</li>
+<li>Inspect items and widgets in luna_day_widget::prepare_fonts().</li>
+<li>Remove existing event widgets in luna_day_widget::set_date().</li>
+</ul>
+
 <p><b>2026.11.16 Release</b></p>
 <ul>
 <li>New grid color.</li>

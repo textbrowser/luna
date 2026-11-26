@@ -155,16 +155,25 @@ void luna_day_widget::mouseDoubleClickEvent(QMouseEvent *event)
 
 void luna_day_widget::prepare_fonts(void)
 {
-  for(int i = 0; i < m_events_area->widget()->layout()->count(); i++)
-    {
-      QFont font;
-      auto widget = m_events_area->widget()->layout()->itemAt(i)->widget();
+  if(m_events_area->widget() && m_events_area->widget()->layout())
+    for(int i = 0; i < m_events_area->widget()->layout()->count(); i++)
+      {
+	auto item = m_events_area->widget()->layout()->itemAt(i);
 
-      font = widget->font();
-      font.setBold(true);
-      font.setStrikeOut(widget->property("done").toBool());
-      widget->setFont(font);
-    }
+	if(!item)
+	  continue;
+
+	auto widget = m_events_area->widget()->layout()->itemAt(i)->widget();
+
+	if(!widget)
+	  continue;
+
+	auto font(widget->font());
+
+	font.setBold(true);
+	font.setStrikeOut(widget->property("done").toBool());
+	widget->setFont(font);
+      }
 
   auto font(m_day->font());
 
@@ -192,6 +201,23 @@ void luna_day_widget::set_current_day(const bool state)
 
 void luna_day_widget::set_date(const QDate &date, const bool enabled)
 {
+  if(m_events_area->widget() && m_events_area->widget()->layout())
+    {
+      auto layout = m_events_area->widget()->layout();
+
+      while(layout->count() > 0)
+	{
+	  auto item = layout->takeAt(0);
+
+	  if(item->widget())
+	    item->widget()->deleteLater();
+
+	  delete item;
+	}
+
+      layout->invalidate();
+    }
+
   m_date = date;
   m_day->setEnabled(enabled);
   set_current_day(QDate::currentDate() == date);
